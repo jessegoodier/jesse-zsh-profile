@@ -1,0 +1,81 @@
+# script to install profile is here: https://gist.github.com/jessegoodier/5cadc498d2141594107279c16803355a
+# under oh-my-zsh-vim-settings-installer.sh
+# curl https://gist.githubusercontent.com/jessegoodier/5cadc498d2141594107279c16803355a/raw/oh-my-zsh-vim-settings-installer.sh |bash
+# use at your own risk. suggest trying in docker first
+# docker run -i -t ubuntu bash # then apt update && apt install -y curl
+
+# aliases
+
+alias v='sudo virsh'
+alias virsh='sudo virsh'
+
+# clean up images not currently be used
+alias drmi='docker rmi -f $(docker images -q)'
+alias deit='docker exec -i -t'
+
+# nginx
+alias nginx='sudo nginx'
+alias n='sudo nginx'
+alias nr='sudo nginx -s reload'
+alias nt='sudo nginx -T'
+
+# randoms
+alias c='clear'
+alias cat='ccat'
+# Stop after sending count ECHO_REQUEST packets #
+alias ping='ping -c 5'
+# Do not wait interval 1 second, go fast #
+alias fastping='ping -c 100 -s.2'
+alias svi='sudo vi'
+## pass options to free ##
+alias meminfo='free -m -l -t'
+
+## get top process eating memory
+alias psmem='ps auxf | sort -nr -k 4'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+
+## get top process eating cpu ##
+alias pscpu='ps auxf | sort -nr -k 3'
+alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+
+## Get server cpu info ##
+alias cpuinfo='lscpu'
+alias df='df -H'
+# alias du='sudo du -chs * 2>/dev/null | sort -rn'
+# alias du='du -h --max-depth=1 | sort -hr'
+alias du='du  -m -d1|sort -h'
+
+if [ "$(command -v exa)" ]; then
+    alias ll='exa -l --color always --icons -a -s type'
+    alias l='exa --color always --icons -a -s type'
+    alias la='exa -l --color always --icons -a -s type'
+    alias ls='exa -G  --color auto --icons -a -s type'
+fi
+
+alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
+alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
+
+# more kube
+alias kgpaw='kubectl get pods --all-namespaces --watch'
+alias kn='kubectl config set-context --current --namespace'
+alias kc='kubectl config use-context'
+alias keit='kubectl exec -i -t'
+alias kic="keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T | grep '\\S'"
+[ -x "$(command -v crossplane)" ] && alias kic="echo \$(keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T) |crossplane format /dev/stdin"
+
+# gcloud
+# create a cluster
+alias gccc='gcloud container clusters create --num-nodes=1 --zone=us-east1-d'
+# get kube creds for a cluster: gcreds jesse-gk1
+gcreds() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters get-credentials $1 --zone $ZONE }
+#delete a cluster
+gccd() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters delete $1 --zone $ZONE }
+# list all clusters in our project, ignore cluster upgrade and surveys
+alias gccl='gcloud container clusters list 2>/dev/null'
+alias gcclj='gcloud container clusters list 2>/dev/null --filter=name:jesse --format="(name,location,currentNodeCount)"'
+# resize cluster
+gccr() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters resize $1 --zone $ZONE --num-nodes $2}
+alias gcdu='gcloud dns record-sets update --type=A --ttl=30 --zone=nginx-rocks --rrdatas'
+alias gccil'=gcloud compute instances list |grep jesse'
+alias gil'=gcloud compute instances list |grep jesse'
+
