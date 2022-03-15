@@ -56,6 +56,8 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.
 alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
 # more kube
+alias kgpv='kubectl get pv'
+alias kgpvw='kubectl get pv --watch'
 alias kgpaw='kubectl get pods --all-namespaces --watch'
 alias kn='kubectl config set-context --current --namespace'
 alias kc='kubectl config use-context'
