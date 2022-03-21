@@ -13,6 +13,12 @@ alias virsh='sudo virsh'
 alias drmi='docker rmi -f $(docker images -q)'
 alias deit='docker exec -i -t'
 
+# azure 
+alias azl='az aks list --output table'
+
+# aws
+alias eks='eksctl get cluster'
+
 # nginx
 alias nginx='sudo nginx'
 alias n='sudo nginx'
