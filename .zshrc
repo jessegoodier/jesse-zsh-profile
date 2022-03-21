@@ -1,37 +1,55 @@
-export PATH=$HOME/.local/bin:/usr/local/opt/curl/bin:$PATH
-
-autoload -Uz compinit && compinit && autoload -U colors; colors
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*'
+export PATH=$HOME/.krew/bin:/usr/jdk-17.0.1/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 
 ZSH_DISABLE_COMPFIX=true
-
-DISABLE_MAGIC_FUNCTIONS="true"
+DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
 
 ZSH_THEME=""
 export ZSH="$HOME/.oh-my-zsh"
-# other good ones: yum ubuntu systemd
+
+zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' insert-unambiguous yes
+
+
 plugins=(
-macos 
-gcloud
-extract
-kubectl
-helm
-terraform
+alias-tips
+az
+aws
+ansible
+colorize
+command-not-found
+cp
 docker
 docker-compose
+docker-machine #https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-machine
+extract
+gcloud
+git
+helm
+httpie
+kubectl
+pip
+screen
+sudo
+systemadmin
+systemd
+terraform
+thefuck
+ubuntu
+web-search
+yum
 zsh-autosuggestions
-zsh-syntax-highlighting
+#zsh-autocomplete
+zsh-completions
 zsh-kubectl-prompt
-alias-tips
-brew
-git)
+zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases
 
-#minikube completion broken, need to fix and export to file
-#source <(minikube completion zsh)
+zle -A {.,}history-incremental-search-forward
+zle -A {.,}history-incremental-search-backward
     
 # if you have home and end keys that don't work
 # bindkey  "^[[1~"  beginning-of-line
@@ -72,9 +90,10 @@ export HISTTIMEFORMAT="[%F %T] "
 setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 
-
-
-# this won't work if you use a omz theme
+autoload -U colors; colors
+autoload -Uz compinit
+compinit
+source ~/_istioctl
 
 PROMPT='
 %{$fg[yellow]%}%n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
@@ -82,6 +101,18 @@ PROMPT='
 
 if [ -x "$(command -v kubectl)" ]; then
 PROMPT='
-%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}%{$fg[yellow]%} %n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
+%{$fg[yellow]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}%{$fg[blue]%} %n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
 >'
 fi
+
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
