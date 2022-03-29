@@ -1,8 +1,5 @@
-# script to install profile is here: https://gist.github.com/jessegoodier/5cadc498d2141594107279c16803355a
-# under oh-my-zsh-vim-settings-installer.sh
-# curl https://gist.githubusercontent.com/jessegoodier/5cadc498d2141594107279c16803355a/raw/oh-my-zsh-vim-settings-installer.sh |bash
+# cp ~/.aliases /tmp & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases
 # use at your own risk. suggest trying in docker first
-# docker run -i -t ubuntu bash # then apt update && apt install -y curl
 
 # aliases
 
