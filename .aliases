@@ -67,7 +67,7 @@ alias kgpvw='kubectl get pv --watch'
 alias kgpaw='kubectl get pods --all-namespaces --watch'
 alias kn='kubectl config set-context --current --namespace'
 alias kc='kubectl config use-context'
-alias kge='kubectl get events --sort-by=.metadata.creationTimestamp'
+alias kge='kubectl get events --sort-by='.metadata.creationTimestamp' --field-selector type!=Normal'
 alias keit='kubectl exec -i -t'
 alias kic="keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T | grep '\\S'"
 [ -x "$(command -v crossplane)" ] && alias kic="echo \$(keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T) |crossplane format /dev/stdin"
