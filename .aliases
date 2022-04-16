@@ -1,7 +1,9 @@
-# cp ~/.aliases /tmp & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases
+alias updategitaliases='cp ~/.aliases /tmp & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 # use at your own risk. suggest trying in docker first
 
 # aliases
+
+
 
 #kubecost
 alias kcl="kubectl logs -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model"
