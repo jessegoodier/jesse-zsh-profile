@@ -4,7 +4,7 @@
 # aliases
 
 #kubecost
-kcl="kubectl logs -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model"
+alias kcl="kubectl logs -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model"
 
 alias v='sudo virsh'
 alias virsh='sudo virsh'
