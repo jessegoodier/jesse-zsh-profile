@@ -3,6 +3,9 @@
 
 # aliases
 
+#kubecost
+kcl="kubectl logs -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model"
+
 alias v='sudo virsh'
 alias virsh='sudo virsh'
 
@@ -62,6 +65,7 @@ alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-s
 alias kgpv='kubectl get pv'
 alias kgpvw='kubectl get pv --watch'
 alias kgpaw='kubectl get pods --all-namespaces --watch'
+alias kgpw='kubectl get pods --watch'
 alias kn='kubectl config set-context --current --namespace'
 alias kc='kubectl config use-context'
 alias kge='kubectl get events --sort-by='.metadata.creationTimestamp' --field-selector type!=Normal'
