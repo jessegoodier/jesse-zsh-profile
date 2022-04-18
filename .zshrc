@@ -13,15 +13,12 @@ zstyle ':autocomplete:*' insert-unambiguous yes
 
 plugins=(
 alias-tips
-az
 aws
 ansible
 colorize
 command-not-found
 cp
 docker
-docker-compose
-docker-machine #https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker-machine
 extract
 gcloud
 git
@@ -47,6 +44,20 @@ zsh-syntax-highlighting
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases
+
+if [ $commands[oc] ]; then
+ compdef _oc oc
+ source <(oc completion zsh)
+fi
+
+if [ $commands[az] ]; then
+ # source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
+ # or 
+ source /usr/local/etc/bash_completion.d/az
+fi
+if [ $commands[youtube-dl] ]; then
+ source /usr/local/etc/bash_completion.d/youtube-dl.bash-completion
+fi    
 
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
