@@ -31,7 +31,6 @@ sudo
 systemadmin
 systemd
 terraform
-thefuck
 ubuntu
 web-search
 yum
@@ -104,7 +103,7 @@ setopt HIST_FIND_NO_DUPS
 autoload -U colors; colors
 autoload -Uz compinit
 compinit
-source ~/_istioctl
+
 
 PROMPT='
 %{$fg[yellow]%}%n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
