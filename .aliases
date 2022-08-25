@@ -4,6 +4,8 @@ alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kub
 
 # aliases
 
+alias h='history'
+alias kg='kubectl get'
 
 # kubecost
 # Get cost-model container log
