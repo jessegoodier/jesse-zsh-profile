@@ -50,9 +50,12 @@ if [ $commands[oc] ]; then
 fi
 
 if [ $commands[az] ]; then
- # source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
- # or
- source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
+ if [ -f /usr/share/bash-completion/completions/az ];
+  source /usr/share/bash-completion/completions/az
+ fi
+ if [ -f /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az ];
+  source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
+ fi
 fi
 if [ $commands[youtube-dl] ]; then
  source /usr/local/etc/bash_completion.d/youtube-dl.bash-completion
