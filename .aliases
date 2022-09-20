@@ -6,7 +6,6 @@ alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kub
 
 alias h='history'
 alias kg='kubectl get'
-
 # kubecost
 # Get cost-model container log
 alias klcm="kubectl logs --namespace kubecost -l app.kubernetes.io/name=cost-analyzer --tail=-1 -c cost-model"
@@ -20,7 +19,7 @@ alias virsh='sudo virsh'
 alias drmi='docker rmi -f $(docker images -q)'
 alias deit='docker exec -i -t'
 
-# azure 
+# azure
 alias azl='az aks list --output table'
 
 # aws
@@ -80,19 +79,20 @@ alias keit='kubectl exec -i -t'
 alias kic="keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T | grep '\\S'"
 [ -x "$(command -v crossplane)" ] && alias kic="echo \$(keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T) |crossplane format /dev/stdin"
 
+# AWS
+alias acreds='aws eks update-kubeconfig --region ca-central-1 --name'
 # gcloud
 # create a cluster
-alias gccc='gcloud container clusters create --num-nodes=1 --zone=us-east1-d'
+alias gccc='gcloud container clusters create --machine-type e2-standard-4 --num-nodes=1 --zone=us-east1-d --network=creynold-vpc'
 # get kube creds for a cluster: gcreds jesse-gk1
 gcreds() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters get-credentials $1 --zone $ZONE }
 #delete a cluster
-gccd() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters delete $1 --zone $ZONE }
+gccd() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters delete $1 --zone $ZONE $2 }
 # list all clusters in our project, ignore cluster upgrade and surveys
 alias gccl='gcloud container clusters list 2>/dev/null'
 alias gcclj='gcloud container clusters list 2>/dev/null --filter=name:jesse --format="(name,location,currentNodeCount)"'
 # resize cluster
-gccr() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters resize $1 --zone $ZONE --num-nodes $2}
+gccr() { ZONE=$(gcloud container clusters list --filter=name:"$1" --format="[no-heading](location)") ; gcloud container clusters resize $1 --zone $ZONE --num-nodes $2 --quiet}
 alias gcdu='gcloud dns record-sets update --type=A --ttl=30 --zone=nginx-rocks --rrdatas'
 alias gccil'=gcloud compute instances list |grep jesse'
 alias gil'=gcloud compute instances list |grep jesse'
-
