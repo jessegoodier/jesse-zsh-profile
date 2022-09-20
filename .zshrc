@@ -50,10 +50,10 @@ if [ $commands[oc] ]; then
 fi
 
 if [ $commands[az] ]; then
- if [ -f /usr/share/bash-completion/completions/az ];
+ if [ -f /usr/share/bash-completion/completions/az ]; then
   source /usr/share/bash-completion/completions/az
  fi
- if [ -f /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az ];
+ if [ -f /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az ]; then
   source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
  fi
 fi
