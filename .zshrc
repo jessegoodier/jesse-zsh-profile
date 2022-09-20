@@ -1,4 +1,4 @@
-export PATH=$HOME/.krew/bin:/usr/jdk-17.0.1/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/.krew/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/opt/kubernetes-cli@1.22/bin:$PATH
 
 ZSH_DISABLE_COMPFIX=true
 DISABLE_MAGIC_FUNCTIONS=true
@@ -51,16 +51,16 @@ fi
 
 if [ $commands[az] ]; then
  # source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
- # or 
- source /usr/local/etc/bash_completion.d/az
+ # or
+ source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
 fi
 if [ $commands[youtube-dl] ]; then
  source /usr/local/etc/bash_completion.d/youtube-dl.bash-completion
-fi    
+fi
 
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
-    
+
 # if you have home and end keys that don't work
 # bindkey  "^[[1~"  beginning-of-line
 # bindkey  "^[[4~"   end-of-line
@@ -126,3 +126,5 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
