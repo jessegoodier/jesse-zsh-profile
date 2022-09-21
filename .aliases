@@ -3,7 +3,7 @@ alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kub
 # use at your own risk. suggest trying in docker first
 
 # aliases
-aliash ll='ls -lah'
+alias ll='ls -lah'
 alias h='history'
 alias kg='kubectl get'
 # kubecost
