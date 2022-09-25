@@ -7,8 +7,7 @@ RUN	 apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		apt-utils build-essential procps curl wget file git \
 		apt-transport-https vim lsb-release unzip less \
-		ca-certificates locales \
-		openssh-client openssh-server \
+		ca-certificates locales openssh-client \
 		patch sudo uuid-runtime zsh
 		# && rm -rf /var/lib/apt/lists/*
 RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -45,7 +44,6 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
  && git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt \
  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-completions \
- && wget https://dl.k8s.io/release/v1.23.10/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl && chmod 700 /usr/local/bin/kubectl \
  && wget -O $HOME/.zshrc https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.zshrc \
  && wget -O $HOME/.vimrc https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc \
  && wget -O $HOME/.aliases https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases
