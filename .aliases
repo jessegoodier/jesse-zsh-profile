@@ -2,6 +2,12 @@ alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`
 alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
 # use at your own risk. suggest trying in docker first
 
+# vscode on wsl (add this to disable using the windows path)
+# /etc/wsl.conf
+# [interop]
+# appendWindowsPath = false
+alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
+
 # aliases
 alias ll='ls -lah'
 alias h='history'
