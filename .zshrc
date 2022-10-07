@@ -1,5 +1,7 @@
 export PATH=$HOME/.krew/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/opt/kubernetes-cli@1.22/bin:$PATH
 
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
 ZSH_DISABLE_COMPFIX=true
 DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
