@@ -53,10 +53,10 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 #  && mkdir -p ~/.oh-my-zsh/completions && chmod -R 755 ~/.oh-my-zsh/completions \
 #  && ln -s /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh \
 #  && ln -s /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
-RUN /home/linuxbrew/.linuxbrew/bin/brew install kubectl@1.22 awscli eksctl azure-cli kubectx fzf jq yq the_silver_searcher pygments helm k9s yamllint gcc ccat
+RUN /home/linuxbrew/.linuxbrew/bin/brew install  awscli eksctl azure-cli kubectl kubectx fzf jq yq the_silver_searcher pygments helm k9s yamllint gcc ccat
 
-RUN ( set -x; cd "$(mktemp -d)" &&  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&  KREW="krew-${OS}_${ARCH}" &&  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&  tar zxvf "${KREW}.tar.gz" &&  ./"${KREW}" install krew) \
-  && kubectl krew install resource-capacity \
-  && kubectl krew install cost
+RUN ( set -x; cd "$(mktemp -d)" &&  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&  KREW="krew-${OS}_${ARCH}" &&  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&  tar zxvf "${KREW}.tar.gz" &&  ./"${KREW}" install krew)
+#   && /home/linuxbrew/.linuxbrew/bin/kubectl krew install resource-capacity \
+#   && /home/linuxbrew/.linuxbrew/bin/kubectl krew install cost
 
 CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
