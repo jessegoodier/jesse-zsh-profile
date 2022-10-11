@@ -2,7 +2,7 @@
 
 This repo contains my favorite zsh profile settings. It is always a WIP. Use at your own risk.
 
-My goal with sharing it is to help those that want and easy to test zsh shell with auto completion, useful prompt and colorful output with most tasks.
+My goal with sharing it is to help those that want an easy to use zsh shell with auto completion, useful prompt and colorful output for most tasks.
 
 I work at Kubecost and we use AWS/Azure/GCP every day. They each have thier own quirks with installation and completion as you can see in the Dockerfile.
 
