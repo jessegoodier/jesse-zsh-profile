@@ -1,4 +1,4 @@
-export PATH=$HOME/.krew/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/opt/kubernetes-cli@1.22/bin:$PATH
+export PATH=/usr/lib/google-cloud-sdk/bin/:$HOME/.krew/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/opt/kubernetes-cli@1.22/bin:$PATH
 
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 

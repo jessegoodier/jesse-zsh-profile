@@ -14,7 +14,7 @@ The .zshrc needs a little clean up, but it works for now.
 
 ## usage
 
-Build your own:
+Build your own (this will take a long time to build):
 ```
 git clone git@github.com:jessegoodier/jesse-zsh-profile.git
 cd jesse-zsh-profile
