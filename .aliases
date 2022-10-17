@@ -31,11 +31,6 @@ alias azl='az aks list --output table'
 # aws
 alias eks='eksctl get cluster'
 
-# nginx
-alias nginx='sudo nginx'
-alias n='sudo nginx'
-alias nr='sudo nginx -s reload'
-alias nt='sudo nginx -T'
 
 # randoms
 alias c='clear'
