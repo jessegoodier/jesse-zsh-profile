@@ -52,7 +52,7 @@ if [ $commands[az] ]; then
  fi
 fi
 if [ $commands[youtube-dl] ]; then
- source /usr/local/etc/bash_completion.d/youtube-dl.bash-completion
+ source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/youtube-dl.bash-completion
 fi
 
 zle -A {.,}history-incremental-search-forward
