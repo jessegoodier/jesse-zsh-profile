@@ -1,7 +1,8 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
 
-unalias ksd
+unalias ksd 2>/dev/null
+alias kc='kubectx'
 
 # use at your own risk. suggest trying in docker first
 
@@ -72,13 +73,14 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.
 alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
 # more kube
+alias kg='kubectl get'
 alias kgpv='kubectl get pv'
 alias kgpvw='kubectl get pv --watch'
 alias kgpaw='kubectl get pods --all-namespaces --watch'
 alias kgpw='kubectl get pods --watch'
 alias kn='kubens'
 alias kx='kubectx'
-alias kc='kubectl config use-context'
+
 alias kge='kubectl get events --sort-by='.metadata.creationTimestamp' --field-selector type!=Normal'
 alias keit='kubectl exec -i -t'
 alias kic="keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T | grep '\\S'"
