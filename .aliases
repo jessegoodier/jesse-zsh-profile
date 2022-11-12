@@ -20,7 +20,7 @@ alias kg='kubectl get'
 # Get cost-model container log
 alias klcm="kubectl logs --namespace kubecost -l app.kubernetes.io/name=cost-analyzer --tail=-1 -c cost-model"
 # Get all logs for cost-analyzer pod (includes frontend):
-alias klca="kubectl logs --namespace kubecost -l app.kubernetes.io/instance=kubecost --tail=-1 --prefix=true --all-containers=true"
+alias klca="kubectl logs --namespace kubecost --max-log-requests -l app.kubernetes.io/instance=kubecost --tail=-1 --prefix=true --all-containers=true"
 
 alias v='sudo virsh'
 alias virsh='sudo virsh'
