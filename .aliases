@@ -1,8 +1,8 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
+alias kexeccm="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model --" $1
 
 unalias ksd 2>/dev/null
-alias kc='kubectx'
 
 # use at your own risk. suggest trying in docker first
 
@@ -78,8 +78,12 @@ alias kgpv='kubectl get pv'
 alias kgpvw='kubectl get pv --watch'
 alias kgpaw='kubectl get pods --all-namespaces --watch'
 alias kgpw='kubectl get pods --watch'
-alias kn='kubens'
-alias kx='kubectx'
+alias kn='kubectl config set-context --current --namespace'
+alias kc='kubectl config use-context'
+if [ "$(command -v kubectx)" ]; then
+  alias kn='kubens'
+  alias kx='kubectx'
+fi
 
 alias kge='kubectl get events --sort-by='.metadata.creationTimestamp' --field-selector type!=Normal'
 alias keit='kubectl exec -i -t'
