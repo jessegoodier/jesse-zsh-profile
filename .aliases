@@ -1,4 +1,20 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
+
+# safety check
+helm() {
+    if [[ $ZSH_KUBECTL_PROMPT = *"jesse"* ]]; then
+     /home/linuxbrew/.linuxbrew/bin/helm $@
+    else
+     echo -n "Realy run this? y or any key to cancel: "
+     read RUNIT
+     if [[ $RUNIT == "y" ]]; then
+        /home/linuxbrew/.linuxbrew/bin/helm $@
+     else
+       echo "Aborted"
+     fi
+    fi
+}
+
 alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
 alias kexeccm="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model --" $1
 
