@@ -2,17 +2,17 @@ alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`
 
 # safety check
 helm() {
-    if [[ $ZSH_KUBECTL_PROMPT = *"jesse"* ]]; then
-     /home/linuxbrew/.linuxbrew/bin/helm $@
-    else
-     echo -n "Realy run this? y or any key to cancel: "
-     read RUNIT
-     if [[ $RUNIT == "y" ]]; then
-        /home/linuxbrew/.linuxbrew/bin/helm $@
-     else
-       echo "Aborted"
-     fi
-    fi
+if [[ $ZSH_KUBECTL_PROMPT = *"jesse"* ]]; then
+ /home/linuxbrew/.linuxbrew/bin/helm $@
+else
+ echo -n "Realy run this in \n $ZSH_KUBECTL_PROMPT? \n y or any key to cancel: "
+ read RUNIT
+ if [[ $RUNIT == "y" ]]; then
+    /home/linuxbrew/.linuxbrew/bin/helm $@
+ else
+   echo "Aborted"
+ fi
+fi
 }
 
 alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
