@@ -1,7 +1,7 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 
 # safety check
-helm() {
+helm_old() {
 if [[ $ZSH_KUBECTL_PROMPT = *"jesse"* ]]; then
  /home/linuxbrew/.linuxbrew/bin/helm $@
 else
