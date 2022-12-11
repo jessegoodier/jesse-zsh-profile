@@ -54,7 +54,9 @@ fi
 if [ $commands[youtube-dl] ]; then
  source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/youtube-dl.bash-completion
 fi
-
+if [ $commands[stern] ]; then
+source <(stern --completion=zsh)
+fi
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
 
