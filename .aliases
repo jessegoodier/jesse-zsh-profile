@@ -16,8 +16,8 @@ fi
 }
 
 alias sp='stern --prompt'
-alias kexecfe="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-analyzer-frontend --" $1
-alias kexeccm="kubectl exec -i -t -n kubecost \$(kubectl get pod --namespace kubecost|grep analyzer -m1 |awk '{print \$1}') -c cost-model --" $1
+alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
+alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
 
 unalias ksd 2>/dev/null
 
