@@ -75,9 +75,7 @@ alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
 ## Get server cpu info ##
 alias cpuinfo='lscpu'
 alias df='df -H'
-# alias du='sudo du -chs * 2>/dev/null | sort -rn'
-# alias du='du -h --max-depth=1 | sort -hr'
-alias du='du  -m -d1|sort -h'
+alias duf='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
 
 if [ "$(command -v exa)" ]; then
     alias ll='exa -l --color always --icons -a -s type'
