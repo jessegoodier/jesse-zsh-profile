@@ -15,6 +15,7 @@ else
 fi
 }
 
+alias kd='kubectl describe'
 alias sp='stern --prompt'
 alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
 alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
