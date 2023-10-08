@@ -51,9 +51,7 @@ if [ $commands[az] ]; then
   source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
  fi
 fi
-if [ $commands[youtube-dl] ]; then
- source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/youtube-dl.bash-completion
-fi
+
 if [ $commands[stern] ]; then
 source <(stern --completion=zsh)
 fi
