@@ -1,5 +1,6 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 
+alias kgnol='kubectl get nodes --show-labels'
 alias kgep='kubectl get ep'
 alias kd='kubectl describe'
 alias sp='stern --prompt'
