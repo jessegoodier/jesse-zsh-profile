@@ -15,7 +15,9 @@ unalias ksd 2>/dev/null
 # /etc/wsl.conf
 # [interop]
 # appendWindowsPath = false
-alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
+if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+ alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
+fi
 
 # aliases
 alias ll='ls -lah'
