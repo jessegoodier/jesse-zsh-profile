@@ -4,8 +4,6 @@ alias kgnol='kubectl get nodes --show-labels'
 alias kgep='kubectl get ep'
 alias kd='kubectl describe'
 alias sp='stern --prompt'
-alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
-alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
 
 unalias ksd 2>/dev/null
 
@@ -26,7 +24,10 @@ alias kg='kubectl get'
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
 alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
-alias kla="kubectl logs -l app=aggegator --tail=-1"
+alias kla="kubectl logs -l app=aggregator --tail=-1"
+alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
+alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
+
 alias v='sudo virsh'
 alias virsh='sudo virsh'
 
