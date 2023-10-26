@@ -25,6 +25,9 @@ alias kg='kubectl get'
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
 alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
 alias kla="kubectl logs -l app=aggregator --tail=-1"
+alias klcmf="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model --follow"
+alias klfef="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend --follow"
+alias klaf="kubectl logs -l app=aggregator --tail=-1 --follow"
 alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
 alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
 
