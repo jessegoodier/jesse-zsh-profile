@@ -25,7 +25,7 @@ alias h='history'
 alias kg='kubectl get'
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
-alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-front-end"
+alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
 alias kla="kubectl logs -l app=aggegator --tail=-1"
 alias v='sudo virsh'
 alias virsh='sudo virsh'
