@@ -1,18 +1,7 @@
 alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
-
-alias kgnol='kubectl get nodes --show-labels'
-alias kgep='kubectl get ep'
-alias kd='kubectl describe'
-alias sp='stern --prompt'
-
 unalias ksd 2>/dev/null
 
-# use at your own risk. suggest trying in docker first
-
 # vscode on wsl (add this to disable using the windows path)
-# /etc/wsl.conf
-# [interop]
-# appendWindowsPath = false
 if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
  alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
 fi
@@ -21,18 +10,22 @@ fi
 alias ll='ls -lah'
 alias h='history'
 alias kg='kubectl get'
+alias kgnol='kubectl get nodes --show-labels'
+alias kgep='kubectl get ep'
+alias kd='kubectl describe'
+alias kests='kubectl edit sts'
+
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
 alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
-alias kla="kubectl logs -l app=aggregator --tail=-1"
-alias klcmf="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model --follow"
-alias klfef="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend --follow"
-alias klaf="kubectl logs -l app=aggregator --tail=-1 --follow"
+alias kla="kubectl logs -l app=aggregator -c aggregator --tail=-1"
+alias klcmf="kubectl logs -l app=cost-analyzer -c cost-model --tail=-1 --follow"
+alias klfef="kubectl logs -l app=cost-analyzer -c cost-analyzer-frontend --tail=-1 --follow"
+alias klaf="kubectl logs -l app=aggregator -c aggregator --tail=-1 --follow"
+
+# todo function to find the deployment
 alias kexecfe="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-analyzer-frontend --" $1
 alias kexeccm="kubectl exec -i -t deployment/kubecost-cost-analyzer -c cost-model --" $1
-
-alias v='sudo virsh'
-alias virsh='sudo virsh'
 
 # clean up images not currently be used
 alias drmi='docker rmi -f $(docker images -q)'
