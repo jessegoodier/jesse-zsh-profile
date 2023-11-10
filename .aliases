@@ -14,6 +14,7 @@ alias kgnol='kubectl get nodes --show-labels'
 alias kgep='kubectl get ep'
 alias kd='kubectl describe'
 alias kests='kubectl edit sts'
+alias kdpi='kubectl describe pod|ag image:'
 
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
