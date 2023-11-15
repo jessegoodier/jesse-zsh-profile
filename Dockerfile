@@ -31,8 +31,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && sed -i "s/green/cyan/g" ~/.zshrc \
  && sed -i "s/blue/red/g" ~/.zshrc
 
-RUN /home/linuxbrew/.linuxbrew/bin/brew install awscli eksctl azure-cli kubectl kubectx fzf jq yq the_silver_searcher pygments helm k9s yamllint gcc ccat mfuentesg/tap/ksd stern openlens
-
+RUN /home/linuxbrew/.linuxbrew/bin/brew install awscli eksctl azure-cli kubectl kubectx fzf jq yq the_silver_searcher pygments helm k9s yamllint gcc ccat mfuentesg/tap/ksd stern openlens aws/tap/eks-node-viewer
 
 RUN ( set -x; cd "$(mktemp -d)" &&  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&  KREW="krew-${OS}_${ARCH}" &&  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&  tar zxvf "${KREW}.tar.gz" &&  ./"${KREW}" install krew)
 
