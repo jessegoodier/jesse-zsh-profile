@@ -15,6 +15,8 @@ alias kgep='kubectl get ep'
 alias kd='kubectl describe'
 alias kests='kubectl edit sts'
 alias kdpi='kubectl describe pod|ag image:'
+alias krrd='kubectl rollout restart deployment'
+alias krrsts='kubectl rollout restart sts'
 
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
