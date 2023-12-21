@@ -135,6 +135,7 @@ for context in $contexts; do
 done }
 
 k-remove-bad-contexts() { # remove dead contexts
+cp ~/.kube/config ./kubeconfig-"`date +"%d-%m-%Y-%H-%M-%S"`"
 contexts=$(kubectl config get-contexts -o name)
 
 # Loop through each context
