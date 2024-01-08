@@ -88,7 +88,7 @@ if [ "$(command -v kubectx)" ]; then
   alias kx='kubectx'
 fi
 
-alais kgsts="kubectl get sts"
+alias kgsts="kubectl get sts"
 alias kge="kubectl get events --sort-by=lastTimestamp --field-selector type!=Normal"
 alias keit='kubectl exec -i -t'
 alias kic="keit -n nginx-ingress \$(kgpn nginx-ingress|grep ingress -m1 |awk '{print \$1}') -- nginx -T | grep '\\S'"
