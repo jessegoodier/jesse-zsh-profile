@@ -2,9 +2,9 @@ alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`
 unalias ksd 2>/dev/null
 
 # vscode on wsl (add this to disable using the windows path)
-if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
- alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
-fi
+# if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+#  alias code='/mnt/c/Program\ Files/Microsoft\ VS\ Code/Code.exe'
+# fi
 
 # aliases
 alias ll='ls -lah'
@@ -17,6 +17,8 @@ alias kests='kubectl edit sts'
 alias kdpi='kubectl describe pod|ag image:'
 alias krrd='kubectl rollout restart deployment'
 alias krrsts='kubectl rollout restart sts'
+alias kgsts="kubectl get sts"
+alias kdelsts="kubectl delete sts"
 
 # kubecost
 alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
