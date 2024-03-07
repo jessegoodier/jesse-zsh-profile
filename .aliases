@@ -157,3 +157,55 @@ for context in $contexts; do
 
     echo ""
 done }
+
+function kgcs {
+
+ #!/bin/zsh
+
+# get the namespace from the first argument, otherwise use the current namespace
+NAMESPACE=$1
+
+if [[ -z "$NAMESPACE" ]]; then
+  NAMESPACE=$(kubectl config view --minify --output 'jsonpath={..namespace}')
+fi
+echo "NAMESPACE: $NAMESPACE"
+
+# Get all pods in the namespace
+pods=($(kubectl get pods -n "$NAMESPACE" -o jsonpath='{.items[*].metadata.name}'))
+
+# Print table header
+printf "%-50s %-50s %-50s\n" "Pod" "Container Name" "Container Status"
+
+# Loop over pods
+for pod in $pods; do
+
+  # Get container statuses for each pod
+  pod_container_statuses=($(kubectl get pod "$pod" -n "$NAMESPACE" -o jsonpath='{.status.containerStatuses}'))
+  container_list=($(echo "$pod_container_statuses" | jq -r '.[].name'))
+
+  # Loop over container statuses
+  for container_name in $container_list; do
+
+    container_status=$(echo "$pod_container_statuses" | jq -r ".[] | select(.name == \"$container_name\") |.state| keys[0]")
+
+    # Print table row
+    printf "%-50s %-50s %-50s\n" "$pod" "$container_name" "$container_status"
+
+  done
+done
+
+
+# Get all ReplicaSets in JSON format
+replica_sets=$(kubectl get replicaset -n $NAMESPACE -o json)
+
+# Use jq to filter ReplicaSets where '.status.replicas' (current) is less than '.spec.replicas' (desired)
+replica_sets_with_unavailable_replicas=($(jq -r '.items[] | select(.status.replicas <.spec.replicas) |.metadata.name' <<< "$replica_sets"))
+
+# Print any unavailable ReplicaSets
+if [[ ${#replica_sets_with_unavailable_replicas[@]} -gt 0 ]]; then
+  printf "\nUnavailable ReplicaSets:\n"
+  for replica_set in $replica_sets_with_unavailable_replicas; do
+    printf "%s\n" "$replica_set"
+  done
+fi
+}
