@@ -1,10 +1,8 @@
 # Update git aliases
 # Save a copy of the current aliases to a temporary file with a timestamp
-cp ~/.aliases /tmp/.aliases-"$(date +%d-%m-%Y-%H-%M-%S)"
 # Download the latest version of the.aliases file from GitHub
-wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases
 # Reload the Oh My Zsh configuration
-omz reload
+alias updategitaliases='cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" & wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases && omz reload'
 
 # Unalias the ksd command, which is a Kubernetes dashboard shortcut
 unalias ksd 2>/dev/null
