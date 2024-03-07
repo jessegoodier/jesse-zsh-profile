@@ -96,7 +96,7 @@ alias cpuinfo='lscpu'
 # List the contents of the current directory in human-readable format and show the size of each file in KB, MB, GB, etc.
 alias df='df -H'
 # List the contents of the current directory in sorted order by size, and for each file, show the size in KB, MB, GB, etc.
-alias du='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
+alias du='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "-${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
 
 # If exa is installed, use it as the default ls command, with colorized output, icons, and additional information such as file type
 if [ "$(command -v exa)" ]; then
@@ -232,9 +232,10 @@ for i in $pods; do
     pod_length=$length
   fi
 done
-
+container_length=30
+status_length=10
 # Print table header
-printf "%-${pod_length}s %-30s %-10s\n" "Pod" "Container Name" "Container Status"
+printf "%-${pod_length}s %-${container_length}s %-${status_length}s\n" "Pod" "Container Name" "Container Status"
 
 # Loop over pods
 for pod in $pods; do
@@ -250,11 +251,11 @@ for pod in $pods; do
 
     # Print table row
     if [ "$container_status" != "running" ]; then
-      printf "\033[0;31m%-${pod_length}s %-30s %-10s\033[0m\n" "$pod" "$container_name" "$container_status"
+      printf "\033[0;31m%-${pod_length}s %-${container_length}s %-${status_length}s\033[0m\n" "$pod" "$container_name" "$container_status"
       # Append $pod to the array
       CURRENT_FAILURES+=("$pod")
     else
-      printf "%-${pod_length}s %-30s %-10s\n" "$pod" "$container_name" "$container_status"
+      printf "%-${pod_length}s %-${container_length}s %-${status_length}s\n" "$pod" "$container_name" "$container_status"
     fi
 
   done
