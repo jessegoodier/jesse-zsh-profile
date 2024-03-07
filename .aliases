@@ -158,9 +158,8 @@ for context in $contexts; do
     echo ""
 done }
 
-function kgcs {
-
- #!/bin/zsh
+function kgc {
+# k get containers
 
 # get the namespace from the first argument, otherwise use the current namespace
 NAMESPACE=$1
