@@ -255,7 +255,7 @@ for pod in $pods; do
       # Append $pod to the array
       CURRENT_FAILURES+=("$pod")
     else
-      printf "%-${pod_length}s %-${container_length}s %-${status_length}s\n" "$pod" "$container_name" "$container_status"
+      printf "\033[32m%-${pod_length}s %-${container_length}s %-${status_length}s\n\033[0m" "$pod" "$container_name" "$container_status"
     fi
 
   done
