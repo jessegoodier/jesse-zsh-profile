@@ -265,7 +265,7 @@ done
 if [[ ${#CURRENT_FAILURES[@]} -gt 0 ]]; then
   printf "\nPods with failing containers:\n"
   for pod in "${CURRENT_FAILURES[@]}"; do
-    printf "\033[0;31m%s\033[0m\n" "$pod: $(get-failure-events-for-resource $pod)"
+    printf "\033[0;31m%s\033[0m\033[0;34m%s\033[0m\n" "$pod: " "$(get-failure-events-for-resource $pod)"
   done
 fi
 
@@ -280,7 +280,7 @@ replica_sets_with_unavailable_replicas=($(jq -r '.items[] | select(.status.repli
 if [[ ${#replica_sets_with_unavailable_replicas[@]} -gt 0 ]]; then
   printf "\nUnavailable ReplicaSets:\n"
   for replica_set in $replica_sets_with_unavailable_replicas; do
-    printf "\033[0;32m%s\033[0m: \033[0;36m%s\033[0m\n" "$replica_set" "$(get-failure-events-for-resource $replica_set)"
+    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$replica_set" "$(get-failure-events-for-resource $replica_set)"
   done
 fi
 }
