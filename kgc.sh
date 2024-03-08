@@ -1,10 +1,11 @@
 #!/bin/zsh
 
 # quick command to find out what is failing in your namespace.
-# many use an alias of `kgp` for kubectl get pods
-# kgc is to get containers
-# It also prints related errors to help fix.
-# Add to your zsh profile
+# like the alias `kgp` for kubectl get pods
+# kgc is to k get containers
+# it also prints related errors to help fix.
+# Add to your zsh profile like:
+# https://github.com/jessegoodier/jesse-zsh-profile/blob/main/.zshrc#L39
 # or download and source kgc.sh
 # this was written for zsh, but you can have AI change it to bash
 
