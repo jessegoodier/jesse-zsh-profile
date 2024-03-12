@@ -2,7 +2,7 @@
 ## source .kgc.bash
 ## kgc (namespace)
 ## use namespace all for all namespaces
-## This is the bash version. see .kgc.sh here for the zsh version
+## This is the bash version. see .kgc.zsh here for the zsh version
 ## <https://github.com/jessegoodier/jesse-zsh-profile/>
 
 # like the alias `kgp` for kubectl get pods
