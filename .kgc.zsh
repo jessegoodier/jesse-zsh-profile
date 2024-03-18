@@ -1,16 +1,16 @@
-## This is a function. use it by source-ing it in your shell and calling one of the functions
+## This is a function. use it by sourcing it in your shell and calling one of the functions
 ## source .kgc.zsh
 ## kgc (namespace)
-## use namespace all for all namespaces
-## This is the bash version. see .kgc.sh here for the zsh version
+## kgc all will run it against all namespaces.
+## This is the zsh version. see .kgc.bash here for the bash version
 ## <https://github.com/jessegoodier/jesse-zsh-profile/>
 
-# like the alias `kgp` for kubectl get pods
+# The name kgc is because it is like the alias `kgp` for kubectl get pods
 # kgc is to k get containers
 # it also prints related errors to help fix.
+
 # Add to your zsh profile like:
 # https://github.com/jessegoodier/jesse-zsh-profile/blob/main/.zshrc#L39
-
 
 function kgc {
 # k get containers, show failures
@@ -79,7 +79,7 @@ for pod in $pod_list; do
 
   # If no containers in the pod, print the pod name and status, move to next pod
     if [ "$num_containers_in_this_pod" -lt 1 ]; then
-      printf "\033[0;31m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "-" "false"
+      printf "\033[0;31m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "-" "false ($(( ${#current_failures[@]} + 1 )))"
       current_failures+=("$pod")
       continue
     fi
@@ -100,14 +100,15 @@ for pod in $pod_list; do
       # check if the pod is Completed, which is green
       terminated_reason=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers[0].state.terminated.reason")
       if [[ "$terminated_reason" == "Completed" ]]; then
-        printf "\033[32m%-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$pod" "$container_name" "$terminated_reason"
+        printf "\033[32m%-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$pod" "$container_name" "$terminated_reason - "
       else
         # check if the pod is pending, make it yellow
         if [[ $(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") .status") == "Pending" ]]; then
-          printf "\033[0;33m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "$container_name" "Pending"
+          printf "\033[0;33m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "$container_name" "Pending ($(( ${#current_failures[@]} + 1 )))"
+          current_failures+=("$pod")
         else
           # every other status falls here
-          printf "\033[0;31m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "$container_name" "$terminated_reason"
+          printf "\033[0;31m%-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$pod" "$container_name" "$terminated_reason ($(( ${#current_failures[@]} + 1 )))"
           # Append $pod to the array
           current_failures+=("$pod")
         fi
@@ -119,9 +120,11 @@ done
 # Print any pods with failing containers
 if [[ ${#current_failures[@]} -gt 0 ]]; then
   printf "\nPods with failing containers:\n"
+  index=1
   for pod in "${current_failures[@]}"; do
-    printf "\033[0;31m%s\033[0m\n" "$pod:"
+    printf "\033[0;31m%s\033[0m\n" "($index) - $pod:"
     printf "\033[0;36m%s\033[0m\n" "$(get_failure_events $pod)"
+    index=$((index+1))
   done
 fi
 
@@ -145,7 +148,7 @@ function get_failure_events() {
   # if you want to see the full events list, this will be faster too:
   # kubectl get events -n $namespace --sort-by=lastTimestamp --field-selector type!=Normal
   # Default output:
-  kubectl get events -n $namespace --sort-by=lastTimestamp --field-selector involvedObject.name=$1
+  kubectl get events -n $namespace --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1
 }
 
 function print_table_header() {
