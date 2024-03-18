@@ -100,7 +100,7 @@ for pod in $pod_list; do
       # check if the pod is Completed, which is green
       terminated_reason=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers[0].state.terminated.reason")
       if [[ "$terminated_reason" == "Completed" ]]; then
-        printf "\033[32m%-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$pod" "$container_name" "$terminated_reason - "
+        printf "\033[32m%-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$pod" "$container_name" "$terminated_reason"
       else
         # check if the pod is pending, make it yellow
         if [[ $(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") .status") == "Pending" ]]; then
