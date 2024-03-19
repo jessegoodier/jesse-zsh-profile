@@ -1,5 +1,7 @@
 # jesse-zsh-profile
 
+>kgc `kubectl get containers` has its own [readme](README-kgc.md)
+
 This repo contains my favorite zsh profile settings. It is always a WIP. Use at your own risk.
 
 My goal with sharing it is to help those that want an easy to use zsh shell with auto completion, useful prompt and colorful output for most tasks.
@@ -12,7 +14,9 @@ The docker image contains a .zsh_history file pre-loaded with common commands to
 
 The .zshrc needs a little clean up, but it works for now.
 
-## usage
+## Usage
+
+### Dockerfile
 
 Build your own (this will take a long time to build):
 ```

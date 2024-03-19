@@ -8,6 +8,14 @@ It also prints related errors to help fix.
 
 ![kgc-screenshot](kgc.png)
 
+## TODO
+
+1. Python pip3 installation
+2. Inform user how to fix more issues
+    1. PV in zone with no nodes
+3. Improve performance of `kgc all`
+4. Move to dedicated repo so people can follow releases
+
 ## Usage
 
 Bash version: [.kgc.bash](.kgc.bash)
