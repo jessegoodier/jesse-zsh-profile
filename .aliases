@@ -14,6 +14,8 @@ source ~/.kgc.zsh
 
 # Unalias the ksd command, which is a k scale deployment
 unalias ksd 2>/dev/null
+unalias hin 2>/dev/null
+unalias hup 2>/dev/null
 
 # Aliases
 # List files in long format with hidden files and directories, and colorize the output
