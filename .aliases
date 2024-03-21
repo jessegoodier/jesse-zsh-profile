@@ -17,6 +17,8 @@ unalias ksd 2>/dev/null
 unalias hin 2>/dev/null
 unalias hup 2>/dev/null
 
+alias fed="kgsec federated-store -oyaml|ksd"
+
 # Aliases
 # List files in long format with hidden files and directories, and colorize the output
 alias ll='ls -lah'
