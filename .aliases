@@ -16,8 +16,9 @@ source ~/.kgc.zsh
 unalias ksd 2>/dev/null
 unalias hin 2>/dev/null
 unalias hup 2>/dev/null
-
+alias hru='helm repo update'
 alias fed="kgsec federated-store -oyaml|ksd"
+
 
 # Aliases
 # List files in long format with hidden files and directories, and colorize the output
