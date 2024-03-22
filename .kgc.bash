@@ -15,7 +15,7 @@ function kgc {
 # k get containers, show failures
 
 # get the namespace from the first argument, otherwise use the current namespace
-namespace=$1
+namespace_arg=$1
 
 # if the namespace is "all" run kgc-all function
 # if [[ $namespace == "all" ]]; then
@@ -23,19 +23,29 @@ namespace=$1
 #   return
 # fi
 
-if [[ -z "$namespace" ]]; then
+if [[ -z "$namespace_arg" ]]; then
   namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
 fi
-printf "\033[0;37m%s\033[0m: \033[0;36m%s\033[0m\n" "NAMESPACE" "$namespace"
 
 # If current_failures is not declared or not an array, declare it as an array
 if [ -z "${current_failures+x}" ] || ! declare -p current_failures 2> /dev/null | grep -q '^declare -a'; then
   declare -a current_failures
 fi
 
+namespace_column=0
+
 # Get all pods in the namespace
-if [[ $namespace == "all" ]]; then
+if [[ $namespace_arg == "all" ]]; then
   pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
+
+  # Figure out the table spacing with namespace
+  for namespace_name in "${namespace_list[@]}"; do
+    namespace_chars=${#namespace_name}
+    if (( namespace_chars > namespace_column )); then
+      namespace_column=$namespace_chars
+    fi
+  done
+
 else
   pods_json=$(kubectl get pods -n "$namespace" -o json | jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
 fi
@@ -43,15 +53,8 @@ fi
 namespace_list=($(echo "$pods_json" | jq -r '.namespace'))
 pod_list=($(echo "$pods_json" | jq -r '.name'))
 
-# Figure out the table spacing
-namespace_column=0
-for namespace_name in "${namespace_list[@]}"; do
-  namespace_chars=${#namespace_name}
-  if (( namespace_chars > namespace_column )); then
-    namespace_column=$namespace_chars
-  fi
-done
 
+# Figure out the table spacing
 pod_column=0
 for pod_name in "${pod_list[@]}"; do
   pod_chars=${#pod_name}
@@ -78,7 +81,12 @@ fi
 
 for pod in "${pod_list[@]}"; do
   num_containers_in_this_pod=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers| length")
-  namespace=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.namespace")
+  if [[ $namespace_arg == "all" ]]; then
+    namespace=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.namespace")
+  else
+    namespace=""
+  fi
+
   if [ "$num_containers_in_this_pod" -lt 1 ]; then
     printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$namespace" "$pod" "-" "false ($(( ${#current_failures[@]} + 1 )))"
     current_failures+=("$pod")
@@ -144,7 +152,12 @@ function get_failure_events() {
 
 function print_table_header() {
   status_column=10
-  printf "%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\n" "namespace" "Pod" "Container Name" "Ready"
+  if [[ $namespace_arg == "all" ]]; then
+    printf "%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\n" "namespace" "Pod" "Container Name" "Ready"
+  else
+    printf "\033[0;37m%s\033[0m: \033[0;36m%s\033[0m\n" "NAMESPACE" "$namespace"
+    printf " %-${pod_column}s %-${container_column}s %-${status_column}s\n" "Pod" "Container Name" "Ready"
+  fi
 }
 
 function kgc-all() {
