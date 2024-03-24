@@ -15,19 +15,20 @@ It also prints related errors to help fix.
     1. PV in zone with no nodes
 3. Improve performance of `kgc all`
 4. Move to dedicated repo so people can follow releases
+5. krew plugin
+
+## Requirements
+
+jq version 1.6 does not work. jq-1.7.1 does work
 
 ## Usage
 
-Bash version: [.kgc.bash](.kgc.bash)
-ZSH version: [.kgc.zsh](.kgc.zsh)
-
-This is a function. Use it by sourcing it in your shell and calling one of the functions
-
+This is a function. Use it by sourcing it in your shell:
 ```sh
-source .kgc.zsh
+source .kgc.sh
 ```
 
-Then run it
+Then run it:
 
 `kgc [namespace]`
 
@@ -37,16 +38,8 @@ Then run it
 
 >You should always read and understand a script before running it. This is a good practice to avoid running malicious code.
 
-ZSH:
-
 ```sh
-wget -O ~/.kgc.zsh https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.zsh
-echo "source ~/.kgc.zsh" >> ~/.zshrc
-```
-
-Bash:
-
-```sh
-wget -O ~/.kgc.bash https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.bash
-echo "source ~/.kgc.bash" >> ~/.bashrc
+wget -O ~/.kgc.sh https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.sh
+echo "source ~/.kgc.sh" >> ~/.zshrc
+echo "source ~/.kgc.sh" >> ~/.bashrc
 ```
