@@ -1,15 +1,18 @@
+#!/bin/bash
+
 ## This is a function. use it by sourcing it in your shell and calling one of the functions
-## source .kgc.bash
-## kgc (namespace)
+## source .kgc.sh
+## run it without and argument to get the current namespace
 ## kgc all will run it against all namespaces.
-## This is the bash version. see .kgc.zsh here for the zsh version
+## Currently maintained here:
 ## <https://github.com/jessegoodier/jesse-zsh-profile/>
 
 # The name kgc is because it is like the alias `kgp` for kubectl get pods
 # kgc is to k get containers
-# it also prints related errors to help fix.
-# Add to your zsh profile like:
-# https://github.com/jessegoodier/jesse-zsh-profile/blob/main/.zshrc#L39
+# it also prints related errors to help identify the cause of failing containers
+# Add to your profile by sourcing this file in your .zshrc or .bashrc
+# source ~/.kgc.sh
+# unalias kgc 2> /dev/null # < if you have a less useful alias for kgc already, put this before the source line
 
 function kgc {
 # k get containers, show failures
@@ -23,6 +26,7 @@ namespace_arg=$1
 #   return
 # fi
 
+namespace=$namespace_arg
 if [[ -z "$namespace_arg" ]]; then
   namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}')
 fi
@@ -37,7 +41,7 @@ namespace_column=0
 # Get all pods in the namespace
 if [[ $namespace_arg == "all" ]]; then
   pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
-
+  namespace_list=($(echo "$pods_json" | jq -r '.namespace'))
   # Figure out the table spacing with namespace
   for namespace_name in "${namespace_list[@]}"; do
     namespace_chars=${#namespace_name}
@@ -47,15 +51,14 @@ if [[ $namespace_arg == "all" ]]; then
   done
 
 else
+  # pods_json=$(kubectl get pods -n "$namespace" -o json | jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
   pods_json=$(kubectl get pods -n "$namespace" -o json | jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
 fi
 
-namespace_list=($(echo "$pods_json" | jq -r '.namespace'))
 pod_list=($(echo "$pods_json" | jq -r '.name'))
 
-
 # Figure out the table spacing
-pod_column=0
+pod_column=4 # needs to be at least as long as the word "Pod"
 for pod_name in "${pod_list[@]}"; do
   pod_chars=${#pod_name}
   if (( pod_chars > pod_column )); then
@@ -65,7 +68,7 @@ done
 
 container_list=($(echo "$pods_json" | jq -r 'select(.containers != null) | .containers[].name'))
 
-container_column=0
+container_column=15 # needs to be at least as long as the words "Container Name"
 for container_name in "${container_list[@]}"; do
   column_width=${#container_name}
   if (( column_width > container_column )); then
@@ -76,7 +79,7 @@ done
 if [[ ${pod_column} -gt 0 ]]; then
   print_table_header
 else
-  printf "\033[0;33mNo pods found in $namespace namespace\033[0m\n"
+  printf "\033[0;33mNo pods found in %s namespace\033[0m\n" "$namespace"
 fi
 
 for pod in "${pod_list[@]}"; do
@@ -135,7 +138,7 @@ if [[ ${#current_failures[@]} -gt 0 ]]; then
   done
 fi
 
-replica_sets=$(kubectl get replicaset -n $namespace -o json)
+replica_sets=$(kubectl get replicaset -n "$namespace" -o json)
 replica_sets_with_unavailable_replicas=($(jq -r '.items[] | select(.status.replicas <.spec.replicas) |.metadata.name' <<< "$replica_sets"))
 
 if [[ ${#replica_sets_with_unavailable_replicas[@]} -gt 0 ]]; then
