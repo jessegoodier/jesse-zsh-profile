@@ -33,7 +33,7 @@ namespace_column=0
 
 # Get all pods in the namespace
 if [[ $namespace_arg == "all" ]]; then
-  pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}'|tr '\n' ' ')
+  pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
   namespace_list=($(echo "$pods_json" | jq -r '.namespace'))
 
   # Figure out the table spacing with namespace
@@ -59,15 +59,30 @@ for pod_name in "${pod_list[@]}"; do
   fi
 done
 
+# find the longest container name for the column width
 container_list=($(echo "$pods_json" | jq -r 'select(.containers != null) | .containers[].name'))
-
-container_column=15 # needs to be at least as long as the words "Container Name"
+container_name_column=15 # needs to be at least as long as the words "Container Name"
 for container_name in "${container_list[@]}"; do
   column_width=${#container_name}
-  if (( column_width > container_column )); then
-    container_column=$column_width
+  if (( column_width > container_name_column )); then
+    container_name_column=$column_width
   fi
 done
+
+# find the longest container image name for the column width
+container_image_column=6 # needs to be at least as long as the words "Image"
+container_image_list=($(echo "$pods_json" | jq -r 'select(.containers != null) | .containers[].image'))
+
+for container_image_name in "${container_image_list[@]}"; do
+  container_image_width=${#${container_image_name##*/}}
+  if (( container_image_width > container_image_column )); then
+    container_image_column=$container_image_width
+  fi
+done
+# Set a max width for the container image column
+if (( container_image_column >45 )); then
+  container_image_column=45
+fi
 
 if [[ ${pod_column} -gt 0 ]]; then
   print_table_header
@@ -86,7 +101,7 @@ for pod in "${pod_list[@]}"; do
 
   if [ "$num_containers_in_this_pod" -lt 1 ]; then
     ((issue_counter+=1))
-    printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "-" "false ($issue_counter)"
+    printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "-" "-" "false ($issue_counter)"
     current_failures+=("$pod" "$namespace")
     continue
   fi
@@ -94,20 +109,28 @@ for pod in "${pod_list[@]}"; do
   containers_in_this_pod_json=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers[]")
   containers_in_this_pod_list=($(echo "$containers_in_this_pod_json" | jq -r ".name"))
   for container_name in "${containers_in_this_pod_list[@]}"; do
-    container_ready=$(echo "$containers_in_this_pod_json" | jq -r ".| select(.name == \"$container_name\") |.ready")
 
+    container_ready=$(echo "$containers_in_this_pod_json" | jq -r ".| select(.name == \"$container_name\") |.ready")
+    container_image=$(echo "$containers_in_this_pod_json" | jq -r ".| select(.name == \"$container_name\") |.image")
+    container_imageID=$(echo "$containers_in_this_pod_json" | jq -r ".| select(.name == \"$container_name\") |.imageID")
+    container_image_short=${container_image##*/}
+    if [[ $container_image_short == sha256* ]]; then
+      imageID="${container_imageID##*/}"  # Remove everything before the last /
+      container_image_short="${imageID%%@*}"  # Remove everything after the first @
+    fi
+ 
     if [[ "$container_ready" == "true" ]]; then
-      printf "\033[32m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$ns_col" "$pod" "$container_name" "$container_ready"
+      printf "\033[32m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n\033[0m" "$ns_col" "$pod" "$container_name" "$container_image_short" "$container_ready"
     else
       terminated_reason=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers[0].state.terminated.reason")
       if [[ "$terminated_reason" == "Completed" ]]; then
-        printf "\033[32m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\n\033[0m" "$ns_col" "$pod" "$container_name" "$terminated_reason"
+        printf "\033[32m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n\033[0m" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason"
       else
         if [[ $(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") .status") == "Pending" ]]; then
-          printf "\033[0;33m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "Pending"
+          printf "\033[0;33m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "Pending"
         else
           ((issue_counter+=1))
-          printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$terminated_reason ($issue_counter)"
+          printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason ($issue_counter)"
           current_failures+=("$pod" "$namespace")
         fi
       fi
@@ -122,7 +145,6 @@ if [[ ${#current_failures[@]} -gt 0 ]]; then
   for ((i=1; i<${#current_failures[@]}; i+=2)); do
     pod=${current_failures[i]} 
     namespace=${current_failures[i+1]}
-    printf "\033[0;31m%s\033[0m\033[0;36m%s\033[0m\n" "($index)" " Namespace:$namespace - Pod:$pod"
     get_failure_events $pod $namespace
     # printf "\033[0;36m%s\033[0m\n" "$(get_failure_events $pod $namespace)"
     index=$((index+1))
@@ -142,15 +164,23 @@ fi
 
 function get_failure_events() {
   # print $1 $2
-  kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1
+  failure_reason=$(kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1)
+  if [[ $failure_reason = *"free ports"* ]] then
+    printf "\033[0;31m%s\033[0m\033[0;36m%s\033[0m\033[0;31m%s\033[0m\n"  "($index)" " Namespace:$namespace - Pod:$pod" " - Port is in use"
+  elif [[ $failure_reason = "No resources found"* ]]; then
+    printf "\033[0;31m%s\033[0m\033[0;36m%s\033[0m\033[0;31m%s\033[0m\n"  "($index)" " Namespace:$namespace - Pod:$pod" " - No recent events"
+  else
+    printf "($index)" " Namespace:$namespace" "Pod:$pod"
+    printf "$failure_reason"
+  fi
 }
 
 function print_table_header() {
   status_column=10
   if [[ $namespace_arg == "all" ]]; then
-    printf "%-${namespace_column}s %-${pod_column}s %-${container_column}s %-${status_column}s\n" "namespace" "Pod" "Container Name" "Ready"
+    printf "%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n" "namespace" "Pod" "Container Name" "Image" "Ready"
   else
     printf "\033[0;37m%s\033[0m: \033[0;36m%s\033[0m\n" "NAMESPACE" "$namespace"
-    printf " %-${pod_column}s %-${container_column}s %-${status_column}s\n" "Pod" "Container Name" "Ready"
+    printf " %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n" "Pod" "Container Name" "Image" "Ready"
   fi
 }
