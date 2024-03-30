@@ -33,8 +33,9 @@ namespace_column=0
 
 # Get all pods in the namespace
 if [[ $namespace_arg == "all" ]]; then
-  pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
+  pods_json=$(kubectl get pods -o json -A| jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}'|tr '\n' ' ')
   namespace_list=($(echo "$pods_json" | jq -r '.namespace'))
+
   # Figure out the table spacing with namespace
   for namespace_name in "${namespace_list[@]}"; do
     namespace_chars=${#namespace_name}
@@ -44,7 +45,6 @@ if [[ $namespace_arg == "all" ]]; then
   done
 
 else
-  # pods_json=$(kubectl get pods -n "$namespace" -o json | jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
   pods_json=$(kubectl get pods -n "$namespace" -o json | jq '.items[] | {namespace: .metadata.namespace, name: .metadata.name, status: .status.phase, containers: .status.containerStatuses}')
 fi
 
