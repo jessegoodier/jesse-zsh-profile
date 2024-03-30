@@ -6,7 +6,7 @@ updategitaliases() {
 
 cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.sh -O ~/.gc.zsh
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.sh -O ~/.kgc.sh
 omz reload
 
 }
