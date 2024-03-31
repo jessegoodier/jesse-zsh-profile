@@ -85,14 +85,14 @@ if (( container_image_column >45 )); then
   container_image_column=45
 fi
 
-if [[ ${pod_column} -gt 0 ]]; then
+if [[ ${#pod_list} -gt 0 ]]; then
   print_table_header
 else
   printf "\033[0;33mNo pods found in %s namespace\033[0m\n" "$namespace"
 fi
 
 for pod in "${pod_list[@]}"; do
-  num_containers_in_this_pod=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers| length")
+  num_containers_in_this_pod=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.containers| length" || echo 0)
   if [[ $namespace_arg == "all" ]]; then
     namespace=$(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") |.namespace")
     ns_col=$namespace
@@ -146,8 +146,7 @@ if [[ ${#current_failures[@]} -gt 0 ]]; then
   for ((i=1; i<${#current_failures[@]}; i+=2)); do
     pod=${current_failures[i]} 
     namespace=${current_failures[i+1]}
-    get_failure_events $pod $namespace
-    # printf "\033[0;36m%s\033[0m\n" "$(get_failure_events $pod $namespace)"
+    get_failure_events $pod $namespace pod
     index=$((index+1))
   done
 fi
@@ -158,22 +157,20 @@ replica_sets_with_unavailable_replicas=($(jq -r '.items[] | select(.status.repli
 if [[ ${#replica_sets_with_unavailable_replicas[@]} -gt 0 ]]; then
   printf "\nUnavailable ReplicaSets:\n"
   for replica_set in "${replica_sets_with_unavailable_replicas[@]}"; do
-    echo xxxx
-    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$replica_set" "$(get_failure_events $replica_set $namespace)"
+    get_failure_events $replica_set $namespace replica_set
   done
 fi
 }
 
 function get_failure_events() {
-  # printf "\033[1;33m Namespace: $2 - Pod $1 \033[0m\n"
   failure_reason=$(kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1 -ojson | jq -r '.items[0].message' 2> /dev/null)
-  # printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $1" "$failure_reason"
   if [[ $failure_reason = *"free ports"* ]]; then
     printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$index" "$2" "$1" "Port is in use"
   elif [[ $failure_reason = "null" ]]; then
     printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$index" "$2" "$1" "No recent events"
+  elif [[ $3 == "replica_set" ]]; then
+    printf "\033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m:\n\033[0;36m%s\033[0m\n" "$2" "$1" "$failure_reason"
   else
-    # printf "\033[0;31m%s\033[0m:\n\033[0;36m%s\033[0m\n" "($index) $2/$1" "$failure_reason"
     printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m\n\033[0;36m%s\033[0m\n" "$index" "$2" "$1:" "$failure_reason"
   fi
 }
