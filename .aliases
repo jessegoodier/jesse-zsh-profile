@@ -6,12 +6,12 @@ updategitaliases() {
 
 cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kgc.sh -O ~/.kgc.sh
+ && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/kgc.sh
 omz reload
 
 }
 unalias kgc 2>/dev/null
-source ~/.kgc.sh
+source ~/kgc.sh
 
 # Unalias the ksd command, which is a k scale deployment
 unalias ksd 2>/dev/null
