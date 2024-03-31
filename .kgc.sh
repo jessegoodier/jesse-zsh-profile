@@ -74,7 +74,8 @@ container_image_column=6 # needs to be at least as long as the words "Image"
 container_image_list=($(echo "$pods_json" | jq -r 'select(.containers != null) | .containers[].image'))
 
 for container_image_name in "${container_image_list[@]}"; do
-  container_image_width=${#${container_image_name##*/}}
+  container_image_short=${container_image_name##*/}
+  container_image_width=${#container_image_short}
   if (( container_image_width > container_image_column )); then
     container_image_column=$container_image_width
   fi
@@ -129,9 +130,13 @@ for pod in "${pod_list[@]}"; do
         if [[ $(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") .status") == "Pending" ]]; then
           printf "\033[0;33m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "Pending"
         else
-          ((issue_counter+=1))
-          printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason ($issue_counter)"
-          current_failures+=("$pod" "$namespace")
+          if [[ "$terminated_reason" == "OOMKilled" ]]; then
+            terminated_reason="Out of Memory"
+          else
+            ((issue_counter+=1))
+            printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason ($issue_counter)"
+            current_failures+=("$pod" "$namespace")
+          fi
         fi
       fi
     fi
@@ -157,21 +162,22 @@ replica_sets_with_unavailable_replicas=($(jq -r '.items[] | select(.status.repli
 if [[ ${#replica_sets_with_unavailable_replicas[@]} -gt 0 ]]; then
   printf "\nUnavailable ReplicaSets:\n"
   for replica_set in "${replica_sets_with_unavailable_replicas[@]}"; do
+    echo xxxx
     printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$replica_set" "$(get_failure_events $replica_set $namespace)"
   done
 fi
 }
 
 function get_failure_events() {
-  # print $1 $2
-  failure_reason=$(kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1)
-  if [[ $failure_reason = *"free ports"* ]] then
-    printf "\033[0;31m%s\033[0m\033[0;36m%s\033[0m\033[0;31m%s\033[0m\n"  "($index)" " Namespace:$namespace - Pod:$pod" " - Port is in use"
-  elif [[ $failure_reason = "No resources found"* ]]; then
-    printf "\033[0;31m%s\033[0m\033[0;36m%s\033[0m\033[0;31m%s\033[0m\n"  "($index)" " Namespace:$namespace - Pod:$pod" " - No recent events"
+  printf $1 $2
+  failure_reason=$(kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1 -ojson | jq -r '.items[0].message' 2> /dev/null)
+  # printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $1" "$failure_reason"
+  if [[ $failure_reason = *"free ports"* ]]; then
+    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $2/$1" "Port is in use"
+  elif [[ $failure_reason = "null" ]]; then
+    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $2/$1" "No recent events"
   else
-    printf "($index)" " Namespace:$namespace" "Pod:$pod"
-    printf "$failure_reason"
+    printf "\033[0;31m%s\033[0m:\n\033[0;36m%s\033[0m\n" "($index) $2/$1" "$failure_reason"
   fi
 }
 
