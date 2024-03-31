@@ -127,16 +127,12 @@ for pod in "${pod_list[@]}"; do
       if [[ "$terminated_reason" == "Completed" ]]; then
         printf "\033[32m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n\033[0m" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason"
       else
-        if [[ $(echo "$pods_json" | jq -r ".| select(.name == \"$pod\") .status") == "Pending" ]]; then
-          printf "\033[0;33m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "Pending"
+        if [[ "$terminated_reason" == "OOMKilled" ]]; then
+          printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason"
         else
-          if [[ "$terminated_reason" == "OOMKilled" ]]; then
-            terminated_reason="Out of Memory"
-          else
-            ((issue_counter+=1))
-            printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason ($issue_counter)"
-            current_failures+=("$pod" "$namespace")
-          fi
+          ((issue_counter+=1))
+          printf "\033[0;31m%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\033[0m\n" "$ns_col" "$pod" "$container_name" "$container_image_short" "$terminated_reason ($issue_counter)"
+          current_failures+=("$pod" "$namespace")
         fi
       fi
     fi
@@ -169,15 +165,16 @@ fi
 }
 
 function get_failure_events() {
-  printf $1 $2
+  # printf "\033[1;33m Namespace: $2 - Pod $1 \033[0m\n"
   failure_reason=$(kubectl get events -n $2 --sort-by=lastTimestamp --field-selector type!=Normal,involvedObject.name=$1 -ojson | jq -r '.items[0].message' 2> /dev/null)
   # printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $1" "$failure_reason"
   if [[ $failure_reason = *"free ports"* ]]; then
-    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $2/$1" "Port is in use"
+    printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$index" "$2" "$1" "Port is in use"
   elif [[ $failure_reason = "null" ]]; then
-    printf "\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "($index) $2/$1" "No recent events"
+    printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m: \033[0;36m%s\033[0m\n" "$index" "$2" "$1" "No recent events"
   else
-    printf "\033[0;31m%s\033[0m:\n\033[0;36m%s\033[0m\n" "($index) $2/$1" "$failure_reason"
+    # printf "\033[0;31m%s\033[0m:\n\033[0;36m%s\033[0m\n" "($index) $2/$1" "$failure_reason"
+    printf "\033[0;31m(%s) \033[0m\033[1;33m%s\033[0m\033[1;37m/\033[0m\033[0;31m%s\033[0m\n\033[0;36m%s\033[0m\n" "$index" "$2" "$1:" "$failure_reason"
   fi
 }
 
@@ -186,7 +183,7 @@ function print_table_header() {
   if [[ $namespace_arg == "all" ]]; then
     printf "%-${namespace_column}s %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n" "namespace" "Pod" "Container Name" "Image" "Ready"
   else
-    printf "\033[0;37m%s\033[0m: \033[0;36m%s\033[0m\n" "NAMESPACE" "$namespace"
+    printf "\033[0;37m%s\033[0m: \033[1;33m%s\033[0m\n" "NAMESPACE" "$namespace"
     printf " %-${pod_column}s %-${container_name_column}s %-${container_image_column}s %-${status_column}s\n" "Pod" "Container Name" "Image" "Ready"
   fi
 }
