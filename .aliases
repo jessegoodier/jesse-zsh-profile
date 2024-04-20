@@ -10,6 +10,8 @@ cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" \
 omz reload
 
 }
+source ~/.aliases-local
+
 unalias kgc 2>/dev/null
 source ~/kgc.sh
 
@@ -17,7 +19,12 @@ source ~/kgc.sh
 unalias ksd 2>/dev/null
 unalias hin 2>/dev/null
 unalias hup 2>/dev/null
+
 alias hru='helm repo update'
+unalias hun 2>/dev/null
+unalias hup 2>/dev/null
+unalias hin 2>/dev/null
+
 alias fed="kgsec federated-store -oyaml|ksd"
 
 
@@ -125,6 +132,7 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.
 # Use ack with colorized output and exclude the same directories as grep
 alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
+alias kubectl="kubecolor"
 # More Kubernetes
 # Get information about Kubernetes resources
 alias kg='kubectl get'
