@@ -25,17 +25,17 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && wget -O $HOME/.vimrc https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc \
  && wget -O $HOME/.aliases https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh \
+ && wget -O /root/.kgc.sh  https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh \
  && sed -i "s/yellow/red/g" ~/.zshrc \
  && sed -i "s/blue/red/g" ~/.zshrc \
  && sed -i "s/magenta/cyan/g" ~/.zshrc \
  && sed -i "s/green/cyan/g" ~/.zshrc \
  && sed -i "s/blue/red/g" ~/.zshrc
 
-RUN /home/linuxbrew/.linuxbrew/bin/brew install awscli eksctl azure-cli kubectl kubectx fzf jq yq the_silver_searcher pygments helm k9s yamllint gcc ccat mfuentesg/tap/ksd stern openlens aws/tap/eks-node-viewer
+RUN /home/linuxbrew/.linuxbrew/bin/brew install gcc
 
-RUN ( set -x; cd "$(mktemp -d)" &&  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&  KREW="krew-${OS}_${ARCH}" &&  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&  tar zxvf "${KREW}.tar.gz" &&  ./"${KREW}" install krew)
-
-COPY ./.zsh_history /root
+COPY ./.zsh_history Brewfile /root/
+RUN /home/linuxbrew/.linuxbrew/bin/brew bundle --file /root/Brewfile
 WORKDIR /root
 
 CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
