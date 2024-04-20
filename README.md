@@ -19,7 +19,8 @@ The .zshrc needs a little clean up, but it works for now.
 ### Dockerfile
 
 Build your own (this will take a long time to build):
-```
+
+```sh
 git clone git@github.com:jessegoodier/jesse-zsh-profile.git
 cd jesse-zsh-profile
 docker build --tag zsh-admin-tools .
@@ -28,13 +29,17 @@ docker run -i -t --rm zsh-admin-tools:latest zsh
 
 Or use prebuilt image:
 
-```
+```sh
 docker run -i -t --rm jgoodier/zsh-admin-tools:latest zsh
 ```
 
+install krew:
+<https://krew.sigs.k8s.io/docs/user-guide/setup/install/>
+
 Install the best krew tools once in the shell:
 
-```
+```sh
+
 k krew install resource-capacity
 k krew install cost
 ```
