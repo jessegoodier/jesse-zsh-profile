@@ -134,6 +134,7 @@ alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-s
 
 if [ "$(command -v kubecolor)" ]; then
   alias kubectl="kubecolor"
+  compdef kubecolor=kubectl
 fi
 
 # More Kubernetes

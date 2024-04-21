@@ -5,5 +5,3 @@ set ignorecase
 set smartcase
 set background=dark
 set maxmempattern=5000
-# /opt/homebrew/bin/fzf
-# set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
