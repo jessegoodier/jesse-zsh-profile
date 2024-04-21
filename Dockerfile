@@ -26,13 +26,13 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt -O ~/.prompt \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
  && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/kgc.sh \
- && mkdir ~/.kube-scripts \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/aliases.sh -O ~/.kube-scripts/aliases.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-aks-clusters.sh -O ~/.kube-scripts/get-all-aks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-eks-clusters.sh -O ~/.kube-scripts/get-all-eks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-gke-clusters.sh -O ~/.kube-scripts/get-all-gke-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
+ && mkdir -p ~/.kube-scripts \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O ~/.kube-scripts/aliases.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-aks-clusters.sh -O ~/.kube-scripts/get-all-aks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-eks-clusters.sh -O ~/.kube-scripts/get-all-eks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-gke-clusters.sh -O ~/.kube-scripts/get-all-gke-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
  && touch /root/.aliases-local \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh \
  && wget -O /root/kgc.sh  https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh \
