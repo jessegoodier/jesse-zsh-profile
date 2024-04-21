@@ -107,4 +107,5 @@ compinit
 # Source aliases and prompt
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 [ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
+[ -f "$HOME/.kube-scripts/aliases.sh" ] && source "$HOME/.kube-scripts/aliases.sh"
 [ -f "$HOME/.prompt" ] && source "$HOME/.prompt"
