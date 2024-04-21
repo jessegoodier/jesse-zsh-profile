@@ -21,10 +21,18 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
  && git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt \
  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-completions \
- && wget -O $HOME/.zshrc https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.zshrc \
- && wget -O $HOME/.vimrc https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc \
- && wget -O $HOME/.prompt https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt \
- && wget -O $HOME/.aliases https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.zshrc -O ~/.zshrc \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O ~/.vimrc \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt -O ~/.prompt \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
+ && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/kgc.sh \
+ && mkdir ~/.kube-scripts \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/aliases.sh -O ~/.kube-scripts/aliases.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-aks-clusters.sh -O ~/.kube-scripts/get-all-aks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-eks-clusters.sh -O ~/.kube-scripts/get-all-eks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-gke-clusters.sh -O ~/.kube-scripts/get-all-gke-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
  && touch /root/.aliases-local \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh \
  && wget -O /root/kgc.sh  https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh \

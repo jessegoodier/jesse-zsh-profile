@@ -6,8 +6,15 @@ updategitaliases() {
 
 cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`" \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
- && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/kgc.sh
-omz reload
+ && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/kgc.sh \
+ && mkdir ~/.kube-scripts \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/aliases.sh -O ~/.kube-scripts/aliases.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-aks-clusters.sh -O ~/.kube-scripts/get-all-aks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-eks-clusters.sh -O ~/.kube-scripts/get-all-eks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/get-all-gke-clusters.sh -O ~/.kube-scripts/get-all-gke-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kube-scripts/main/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
+ && omz reload
 
 }
 source ~/.aliases-local
@@ -187,47 +194,3 @@ alias gccil'=gcloud compute instances list |grep jesse'
 alias gil'=gcloud compute instances list |grep jesse'
 
 
-k-get-all-images() {# Loop through each context
-for context in $contexts; do
-    echo "Context: $context"
-    kubectl config use-context $context
-
-    namespaces=$(kubectl get namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}')
-
-    # Loop through each namespace and print the image name of each pod
-    for namespace in $namespaces; do
-
-        # Get all pods in the current namespace
-        pods=$(kubectl get pods -n $namespace -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}')
-
-        # Loop through each pod and print its image name
-        for pod in $pods; do
-            image=$(kubectl get pod $pod -n $namespace -o jsonpath='{.spec.containers[*].image}')
-            echo "Context: $context, Namespace: $namespace, Pod: $pod, Image: $image"
-        done
-
-    done
-done
-}
-
-k-remove-bad-contexts() { # remove dead contexts
-cp ~/.kube/config ./kubeconfig-"`date +"%d-%m-%Y-%H-%M-%S"`"
-contexts=$(kubectl config get-contexts -o name)
-
-# Loop through each context
-for context in $contexts; do
-    echo "Context: $context"
-    kubectl config use-context $context
-
-    # Check if the context is working
-    if kubectl get pods &> /dev/null; then
-        echo "Context $context is working"
-    else
-        echo "Context $context is not working"
-        kubectl config delete-context $context
-        echo "--------------Context $context has been removed------------------"
-    fi
-
-    echo ""
-done
-}
