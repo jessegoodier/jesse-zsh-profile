@@ -28,35 +28,21 @@ extract
 gcloud
 git
 helm
-httpie
 kubectl
-sudo
-systemadmin
-systemd
-ubuntu
 zsh-autosuggestions
 zsh-completions
 zsh-kubectl-prompt
 zsh-syntax-highlighting
 )
 
+# other plugins : httpie
+# sudo
+# systemadmin
+# systemd
+# ubuntu
+
 # Source oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-
-# Set autocompletion for commands
-if (( $+commands[oc] )); then
- compdef _oc oc
- source <(oc completion zsh)
-fi
-
-if (( $+commands[az] )); then
- if [ -f /usr/share/bash-completion/completions/az ]; then
-  source /usr/share/bash-completion/completions/az
- fi
- if [ -f /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az ]; then
-  source /home/linuxbrew/.linuxbrew/etc/bash_completion.d/az
- fi
-fi
 
 if (( $+commands[stern] )); then
 source <(stern --completion=zsh)
