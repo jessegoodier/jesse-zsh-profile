@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# Get all contexts
-contexts=$(kubectl config get-contexts -o name)
+
+# run with all argument to get all contexts
+
+if [ "$1" = "all" ]; then
+  contexts=$(kubectl config get-contexts -o name)
+else
+  contexts=$(kubectl config current-context)
+fi
+
 
 # Loop through each context
 for context in $contexts; do
