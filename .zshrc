@@ -44,9 +44,12 @@ zsh-syntax-highlighting
 # Source oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
-if (( $+commands[stern] )); then
-source <(stern --completion=zsh)
-fi
+
+# more command completions
+
+[ -s "$(brew --prefix)/etc/bash_completion.d/az" ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
+[ $+commands[stern] ] && source <(stern --completion=zsh)
+
 
 # Set key bindings
 zle -A {.,}history-incremental-search-forward
@@ -99,16 +102,9 @@ fi
 # Run compinit
 compinit
 
-
 # Source fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # Source aliases and prompt
-if [ -f "$HOME/.aliases" ]; then
-    source "$HOME/.aliases"
-fi
-if [ -f "$HOME/.aliases-local" ]; then
-    source "$HOME/.aliases-local"
-fi
-if [ -f "$HOME/.prompt" ]; then
-    source "$HOME/.prompt"
-fi
+[ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
+[ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
+[ -f "$HOME/.prompt" ] && source "$HOME/.prompt"
