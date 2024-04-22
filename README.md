@@ -1,20 +1,24 @@
 # jesse-zsh-profile
 
->kgc `kubectl get containers` has its own [readme](README-kgc.md)
+> kgc `kubectl get containers` has its moved to its own [repo](https://github.com/jessegoodier/kgc)
 
-This repo contains my favorite zsh profile settings. It is always a WIP. Use at your own risk.
+> This repo contains my favorite zsh profile settings. It is always a WIP. Use at your own risk.
 
 My goal with sharing it is to help those that want an easy to use zsh shell with auto completion, useful prompt and colorful output for most tasks.
 
 I work at Kubecost and we use AWS/Azure/GCP every day. They each have thier own quirks with installation and completion as you can see in the Dockerfile.
 
-It has the GCP/AWS/Azure CLIs, kubectl (k), kubectx (kc/kn), krew (k krew) preloaded.
+It has the GCP/AWS/Azure CLIs, kubectl (k), kubectx (kx/kn) preloaded.
 
-The docker image contains a .zsh_history file pre-loaded with common commands to login and list clusters. Easily removed if it is distracting.
+The docker image contains a .zsh_history file so you can see history recommendations with common commands to login and list clusters. This is easily removed if it is distracting.
 
 The .zshrc needs a little clean up, but it works for now.
 
 ## Usage
+
+You can copy the commands out of the [Dockerfile](Dockerfile) for the items you want to install in your shell.
+
+Or use a the [prebuilt image](https://hub.docker.com/r/jgoodier/zsh-admin-tools)
 
 ### Dockerfile
 

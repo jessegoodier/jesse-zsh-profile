@@ -1,9 +1,9 @@
 #!/bin/bash
 
-PROFILE="EngineeringDeveloper"
+# PROFILE="EngineeringDeveloper"
 # PROFILE="EngineeringAdmin"
 # Get all AWS regions
-regions=$(aws ec2 describe-regions --profile "$PROFILE" --query 'Regions[].RegionName' --output text)
+regions=$(aws ec2 describe-regions --region us-east-2 --profile "$PROFILE" --query 'Regions[].RegionName' --output text)
 
 # Loop through each region
 for region in $regions
