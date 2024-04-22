@@ -31,11 +31,59 @@ docker build --tag zsh-admin-tools .
 docker run -i -t --rm zsh-admin-tools:latest zsh
 ```
 
-Or use prebuilt image:
+Or use a prebuilt image:
 
 ```sh
 docker run -i -t --rm jgoodier/zsh-admin-tools:latest zsh
 ```
+
+Profile credentials to your AWS/Azure/GCP accounts:
+
+```sh
+az login
+```
+
+```sh
+aws configure
+```
+
+```sh
+gcloud auth login
+```
+
+Get the cluster contexts:
+
+```sh
+cloud-get-all-eks-clusters
+```
+
+```sh
+cloud-get-all-aks-clusters
+```
+
+```sh
+cloud-get-all-gcp-clusters
+```
+
+Use tab completion with kubectl:
+
+```sh
+kubectl get pods <tab>
+```
+
+Or set the context to your namespace:
+
+```sh
+kn <tab>
+```
+
+then 
+```sh
+kgp <tab> -oyaml
+```
+
+
+### Install krew
 
 install krew:
 <https://krew.sigs.k8s.io/docs/user-guide/setup/install/>
