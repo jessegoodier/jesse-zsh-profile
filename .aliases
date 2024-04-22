@@ -137,12 +137,6 @@ alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.
 # Use ack with colorized output and exclude the same directories as grep
 alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
-if [ "$(command -v kubecolor)" ]; then
-  alias kubectl="kubecolor"
-  compdef kubecolor=kubectl
-  alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
-fi
-
 # More Kubernetes
 # Get information about Kubernetes resources
 alias kg='kubectl get'

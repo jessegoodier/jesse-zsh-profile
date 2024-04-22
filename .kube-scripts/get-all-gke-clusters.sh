@@ -13,7 +13,8 @@ for region in $regions; do
     for cluster in $clusters; do
         echo "Adding cluster $cluster in region $region to kubeconfig"
         gcloud container clusters get-credentials "$cluster" --zone="$region"
-        kubectl config rename-context "$(kubectl config current-context)" "$cluster-gke"
+        # kubectl config rename-context "$(kubectl config current-context)" "$cluster-$region-gke"
+        kubectl config rename-context "$(kubectl config current-context)" "$cluster"
     done
 done
 

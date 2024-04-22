@@ -23,7 +23,10 @@ do
         do
             echo "Adding AKS $cluster from subscription $subscription to kubeconfig"
             # Get the credentials for the AKS cluster and merge them into your kubeconfig
-            az aks get-credentials --resource-group "$rg" --name "$cluster" --file ~/.kube/config --overwrite-existing --context "$cluster-aks-$subscription"
+            # add metadata to the context:
+            # az aks get-credentials --resource-group "$rg" --name "$cluster" --file ~/.kube/config --overwrite-existing --context "$cluster-aks-$subscription"
+            # or just the cluster name:
+            az aks get-credentials --resource-group "$rg" --name "$cluster" --file ~/.kube/config --overwrite-existing --context "$cluster"
         done
     done
 done

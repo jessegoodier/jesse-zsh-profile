@@ -48,8 +48,12 @@ source $ZSH/oh-my-zsh.sh
 # more command completions
 
 [ -s "$(brew --prefix)/etc/bash_completion.d/az" ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
-[ $+commands[stern] ] && source <(stern --completion=zsh)
-
+[ -s $(command -v stern) ] && source <(stern --completion=zsh)
+if [ -s "$(command -v kubecolor)" ]; then
+  alias kubectl="kubecolor"
+  compdef kubecolor=kubectl
+  alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
+fi
 
 # Set key bindings
 zle -A {.,}history-incremental-search-forward

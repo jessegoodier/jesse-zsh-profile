@@ -17,9 +17,9 @@ do
     do
         # Update the kubeconfig file for each cluster with an alias that is just the cluster name
         if [[ "$PROFILE" == "EngineeringDeveloper" ]]; then
-            aws eks update-kubeconfig --profile "$PROFILE" --region "$region" --name "$cluster" --alias "$cluster-eks"
-        else
             aws eks update-kubeconfig --profile "$PROFILE" --region "$region" --name "$cluster" --alias "$cluster-$PROFILE"
+        else
+            aws eks update-kubeconfig --profile "$PROFILE" --region "$region" --name "$cluster" --alias "$cluster"
         fi
 
     done
