@@ -35,7 +35,6 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh \
- && wget -O /root/kgc.sh  https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh \
  && sed -i "s/yellow/red/g" ~/.zshrc \
  && sed -i "s/blue/red/g" ~/.zshrc \
  && sed -i "s/magenta/cyan/g" ~/.zshrc \
