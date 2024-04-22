@@ -82,6 +82,11 @@ then
 kgp <tab> -oyaml
 ```
 
+use kgc (kubectl get containers)!
+
+```sh
+kgc -A
+```
 
 ### Install krew
 
