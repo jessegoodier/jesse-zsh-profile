@@ -47,8 +47,9 @@ source $ZSH/oh-my-zsh.sh
 
 # more command completions
 
-[ -s "$(brew --prefix)/etc/bash_completion.d/az" ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
-[ -s $(command -v stern) ] && source <(stern --completion=zsh)
+[ "$(command -v brew)" &>/dev/null ] && [  "$(brew --prefix)/etc/bash_completion.d/az" ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
+[ "$(command -v stern)" ] && source <(stern --completion=zsh)
+
 if [ -s "$(command -v kubecolor)" ]; then
   alias kubectl="kubecolor"
   compdef kubecolor=kubectl
