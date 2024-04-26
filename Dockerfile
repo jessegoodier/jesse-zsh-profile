@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-
+USER 0
 RUN apt-get update \
   && apt-get install -y --no-install-recommends software-properties-common \
   && apt-get update \
@@ -9,11 +9,21 @@ RUN apt-get update \
   ca-certificates locales openssh-client \
   patch sudo uuid-runtime zsh
 
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+RUN useradd -m -s /bin/zsh linuxbrew && \
+  usermod -aG sudo linuxbrew &&  \
+  mkdir -p /home/linuxbrew/.linuxbrew && \
+  chown -R linuxbrew: /home/linuxbrew/.linuxbrew
+USER linuxbrew
+WORKDIR /home/linuxbrew
+
+COPY Brewfile /home/linuxbrew/
+RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+ && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
+ && /home/linuxbrew/.linuxbrew/bin/brew bundle --file /home/linuxbrew/Brewfile
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
  && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
- && apt-get update && apt-get -y install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
+ && apt-get update && sudo apt-get -y install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
  && git clone https://github.com/djui/alias-tips.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/alias-tips \
@@ -25,7 +35,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O ~/.vimrc \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt -O ~/.prompt \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
- && touch /root/.aliases-local \
+ && touch $HOME/.aliases-local \
  && mkdir -p ~/.kube-scripts \
  && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/.kube-scripts/kgc.sh \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O ~/.kube-scripts/aliases.sh \
@@ -40,11 +50,5 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && sed -i "s/magenta/cyan/g" ~/.zshrc \
  && sed -i "s/green/cyan/g" ~/.zshrc \
  && sed -i "s/blue/red/g" ~/.zshrc
-
-RUN /home/linuxbrew/.linuxbrew/bin/brew install gcc
-
-COPY ./.zsh_history Brewfile /root/
-RUN /home/linuxbrew/.linuxbrew/bin/brew bundle --file /root/Brewfile
-WORKDIR /root
 
 CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"

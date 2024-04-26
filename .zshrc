@@ -47,7 +47,8 @@ source $ZSH/oh-my-zsh.sh
 
 # more command completions
 
-[ "$(command -v brew)" &>/dev/null ] && [  "$(brew --prefix)/etc/bash_completion.d/az" ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
+[ "$(command -v brew)" &>/dev/null ] && [ -f "$(brew --prefix)/etc/bash_completion.d/az" &>/dev/null ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
+
 [ "$(command -v stern)" ] && source <(stern --completion=zsh)
 
 if [ -s "$(command -v kubecolor)" ]; then
