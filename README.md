@@ -1,12 +1,11 @@
 # jesse-zsh-profile
 
 > kgc `kubectl get containers` has its moved to its own [repo](https://github.com/jessegoodier/kgc)
-
 > This repo contains my favorite zsh profile settings. It is always a WIP. Use at your own risk.
 
 My goal with sharing it is to help those that want an easy to use zsh shell with auto completion, useful prompt and colorful output for most tasks.
 
-I work at Kubecost and we use AWS/Azure/GCP every day. They each have thier own quirks with installation and completion as you can see in the Dockerfile.
+I work at Kubecost and we use AWS/Azure/GCP every day. `google-cloud-sdk` install is broken, consider the much smaller <https://hub.docker.com/r/alpine/k8s/tags>.
 
 It has the GCP/AWS/Azure CLIs, kubectl (k), kubectx (kx/kn) preloaded.
 
@@ -77,7 +76,7 @@ Or set the context to your namespace:
 kn <tab>
 ```
 
-then 
+then
 ```sh
 kgp <tab> -oyaml
 ```

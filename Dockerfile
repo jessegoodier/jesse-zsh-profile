@@ -12,18 +12,26 @@ RUN apt-get update \
 RUN useradd -m -s /bin/zsh linuxbrew && \
   usermod -aG sudo linuxbrew &&  \
   mkdir -p /home/linuxbrew/.linuxbrew && \
-  chown -R linuxbrew: /home/linuxbrew/.linuxbrew
+  chown -R linuxbrew: /home/linuxbrew/.linuxbrew \
+  && echo "linuxbrew ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/linuxbrew \
+  && echo "ALL ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/nopasswd
 USER linuxbrew
 WORKDIR /home/linuxbrew
 
 COPY Brewfile /home/linuxbrew/
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
- && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
- && /home/linuxbrew/.linuxbrew/bin/brew bundle --file /home/linuxbrew/Brewfile
+COPY pip.conf /home/linuxbrew/.config/pip/pip.conf
+COPY .aliases-local /home/linuxbrew/.aliases-local
 
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
- && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
- && apt-get update && sudo apt-get -y install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
+RUN sudo chown -R linuxbrew:linuxbrew /home/linuxbrew \
+  && NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+  && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
+  && /home/linuxbrew/.linuxbrew/bin/brew bundle --file /home/linuxbrew/Brewfile \
+  && /home/linuxbrew/.linuxbrew/bin/brew cleanup \
+  && /home/linuxbrew/.linuxbrew/bin/pip3 install boto3 s3-browser requests
+
+# RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+#  && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+#  && apt-get update && sudo apt-get -y install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
 
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
  && git clone https://github.com/djui/alias-tips.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/alias-tips \
@@ -35,7 +43,6 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O ~/.vimrc \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt -O ~/.prompt \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
- && touch $HOME/.aliases-local \
  && mkdir -p ~/.kube-scripts \
  && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O ~/.kube-scripts/kgc.sh \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O ~/.kube-scripts/aliases.sh \

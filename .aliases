@@ -96,8 +96,8 @@ alias eks='eksctl get cluster'
 # Randoms
 # Clear the terminal screen
 alias c='clear'
-# Pipe the output of cat through ccat, which adds color and formatting to the output
-# alias cat='ccat'
+
+alias cat='bat --paging=never'
 # Send five ICMP ECHO_REQUEST packets and stop
 alias ping='ping -c 5'
 # Send 100 ICMP ECHO_REQUEST packets with a packet size of 0.2 seconds and do not wait one second between packets

@@ -1,0 +1,3 @@
+alias p="/home/linuxbrew/.linuxbrew/bin/python"
+alias python="/home/linuxbrew/.linuxbrew/bin/python"
+alias pip="/home/linuxbrew/.linuxbrew/bin/pip3"

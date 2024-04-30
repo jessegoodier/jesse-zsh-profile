@@ -1,5 +1,5 @@
 # Set PATH
-export PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
+export PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.local/bin:$PATH
 
 # Set environment variables
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
@@ -114,4 +114,4 @@ compinit
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 [ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
 [ -f "$HOME/.kube-scripts/aliases.sh" ] && source "$HOME/.kube-scripts/aliases.sh"
-[ -f "$HOME/.prompt" ] && source "$HOME/.prompt"
+[ -f "$HOME/.prompt.zsh" ] && source "$HOME/.prompt.zsh"
