@@ -21,7 +21,9 @@ Or use a the [prebuilt image](https://hub.docker.com/r/jgoodier/zsh-admin-tools)
 
 ### Dockerfile
 
-Build your own (this will take a long time to build):
+Modify the username `jesse` in [Dockerfile](Dockerfile) to your liking.
+
+Then build your own image (this will take a long time to build):
 
 ```sh
 git clone git@github.com:jessegoodier/jesse-zsh-profile.git

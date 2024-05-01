@@ -97,7 +97,7 @@ alias eks='eksctl get cluster'
 # Clear the terminal screen
 alias c='clear'
 
-alias cat='bat --paging=never'
+alias cat='bat --style=plain --paging=never'
 # Send five ICMP ECHO_REQUEST packets and stop
 alias ping='ping -c 5'
 # Send 100 ICMP ECHO_REQUEST packets with a packet size of 0.2 seconds and do not wait one second between packets
