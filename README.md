@@ -15,13 +15,13 @@ The .zshrc needs a little clean up, but it works for now.
 
 ## Usage
 
+> This Docker image is huge! It is only for testing purposes, though it is useful for experimenting with profile changes without risk.
+
 You can copy the commands out of the [Dockerfile](Dockerfile) for the items you want to install in your shell.
 
 Or use a the [prebuilt image](https://hub.docker.com/r/jgoodier/zsh-admin-tools)
 
 ### Dockerfile
-
-Modify the username `jesse` in [Dockerfile](Dockerfile) to your liking.
 
 Then build your own image (this will take a long time to build):
 
