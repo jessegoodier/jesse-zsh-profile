@@ -17,7 +17,7 @@ wget wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O ~/.kube-scripts/k-get-all-pod-images.sh \
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O ~/.kube-scripts/k-remove-bad-contexts.sh \
   && touch ~/.aliases-local
-
+omz reload
 }
 
 # Unalias the ksd command, which is a k scale deployment
