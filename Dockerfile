@@ -17,12 +17,12 @@ RUN sed -i 's/ALL=(ALL:ALL) ALL/ALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 USER ubuntu
 WORKDIR /home/ubuntu
 
-COPY .aliases-local Brewfile /home/ubuntu/
-COPY pip.conf /home/ubuntu/.config/pip/pip.conf
+COPY .aliases-local Brewfile $HOME/
+COPY pip.conf $HOME/.config/pip/pip.conf
 
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
   && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
-  && /home/linuxbrew/.linuxbrew/bin/brew bundle --file /home/ubuntu/Brewfile \
+  && /home/linuxbrew/.linuxbrew/bin/brew bundle --file $HOME/Brewfile \
   && /home/linuxbrew/.linuxbrew/bin/brew cleanup \
   && /home/linuxbrew/.linuxbrew/bin/pip3 install boto3 s3-browser requests
 
@@ -36,18 +36,18 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
  && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
  && git clone https://github.com/superbrothers/zsh-kubectl-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-kubectl-prompt \
  && git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-completions \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.zshrc -O /home/ubuntu/.zshrc \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O /home/ubuntu/.vimrc \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt.zsh -O /home/ubuntu/.prompt.zsh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O /home/ubuntu/.aliases \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.zshrc -O $HOME/.zshrc \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O $HOME/.vimrc \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt.zsh -O $HOME/.prompt.zsh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O $HOME/.aliases \
  && mkdir -p ~/.kube-scripts \
- && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O /home/ubuntu/.kube-scripts/kgc.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O /home/ubuntu/.kube-scripts/aliases.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-aks-clusters.sh -O /home/ubuntu/.kube-scripts/get-all-aks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-eks-clusters.sh -O /home/ubuntu/.kube-scripts/get-all-eks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-gke-clusters.sh -O /home/ubuntu/.kube-scripts/get-all-gke-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O /home/ubuntu/.kube-scripts/k-get-all-pod-images.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O /home/ubuntu/.kube-scripts/k-remove-bad-contexts.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O $HOME/.kube-scripts/kgc.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O $HOME/.kube-scripts/aliases.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-aks-clusters.sh -O $HOME/.kube-scripts/get-all-aks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-eks-clusters.sh -O $HOME/.kube-scripts/get-all-eks-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-gke-clusters.sh -O $HOME/.kube-scripts/get-all-gke-clusters.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O $HOME/.kube-scripts/k-get-all-pod-images.sh \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O $HOME/.kube-scripts/k-remove-bad-contexts.sh \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh \
  && sudo chown -R ubuntu: /home/ubuntu \
  && sudo chsh -s /bin/zsh ubuntu
