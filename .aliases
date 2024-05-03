@@ -5,7 +5,7 @@
 updategitaliases() {
 
 cp ~/.aliases /tmp/.aliases-"`date +"%d-%m-%Y-%H-%M-%S"`"
-wget wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
+wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O ~/.aliases \
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O ~/.vimrc \
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt.zsh -O ~/.prompt.zsh \
   && mkdir -p ~/.kube-scripts \
