@@ -20,6 +20,12 @@ wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.alia
 omz reload
 }
 
+if [ "$(command -v kubecolor)" ]; then
+  alias kubectl="kubecolor"
+  compdef kubecolor=kubectl
+  alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
+fi
+
 # Unalias the ksd command, which is a k scale deployment
 unalias ksd 2>/dev/null
 unalias hin 2>/dev/null
