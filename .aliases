@@ -67,7 +67,7 @@ alias kdelsts="kubectl delete sts"
 
 # Kubecost
 # Get the logs for the cost-model container in the cost-analyzer pod
-alias klcm="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-model"
+alias klcm="kubectl logs -l app.kubernetes.io/name=cost-analyzer --tail=-1 -c cost-model"
 # Get the logs for the cost-analyzer-frontend container in the cost-analyzer pod
 alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
 # Get the logs for the aggregator container in the aggregator pod
