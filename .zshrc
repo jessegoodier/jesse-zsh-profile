@@ -115,3 +115,4 @@ compinit
 [ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
 [ -f "$HOME/.kube-scripts/aliases.sh" ] && source "$HOME/.kube-scripts/aliases.sh"
 [ -f "$HOME/.prompt.zsh" ] && source "$HOME/.prompt.zsh"
+[ -f "$HOME/.alias-help" ] && source "$HOME/.alias-help"
