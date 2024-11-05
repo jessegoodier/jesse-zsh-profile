@@ -76,3 +76,4 @@ alias_help() {
 
 # Add the alias for the help function
 alias aliases='alias_help'
+alias '?'='alias_help'
