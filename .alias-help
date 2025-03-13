@@ -20,6 +20,8 @@ alias_help() {
     
     echo "\nKubecost Specific:"
     echo "----------------"
+    echo "kai     - List all Kubecost images"
+    echo "nai     - List all nightly images"
     echo "klcm    - Logs from cost-model container"
     echo "klfe    - Logs from frontend container"
     echo "kla     - Logs from aggregator"
