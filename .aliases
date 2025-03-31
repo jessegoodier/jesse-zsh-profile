@@ -23,16 +23,28 @@ omz reload
 # nightly all images
 nai() {
   helm template kubecost-nightly --repo https://kubecost.github.io/nightly-helm-chart cost-analyzer \
-    --set networkCosts.enabled=true \
-    --set clusterController.enabled=true "$@" \
+  --set networkCosts.enabled=true \
+  --set clusterController.enabled=true \
+  --set prometheus.alertmanager.enabled=true \
+  --set prometheus.server.enabled=true \
+  --set prometheus.pushgateway.enabled=true \
+  --set prometheus.nodeExporter.enabled=true \
+  --set prometheus.configmapReload.prometheus.enabled=true \
+    "$@" \
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
 }
 
 # kubecost all images
 kai() {
   helm template kubecost-ga --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
-    --set networkCosts.enabled=true \
-    --set clusterController.enabled=true "$@" \
+  --set networkCosts.enabled=true \
+  --set clusterController.enabled=true \
+  --set prometheus.alertmanager.enabled=true \
+  --set prometheus.server.enabled=true \
+  --set prometheus.pushgateway.enabled=true \
+  --set prometheus.nodeExporter.enabled=true \
+  --set prometheus.configmapReload.prometheus.enabled=true \
+    "$@" \
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
 }
 
