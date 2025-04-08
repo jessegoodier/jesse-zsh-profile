@@ -167,9 +167,9 @@ if [ "$(command -v exa)" ]; then
 fi
 
 # Use grep with colorized output and exclude certain directories, such as.bzr, CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders, and.vs-kubernetes
-alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
+# alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 # Use ack with colorized output and exclude the same directories as grep
-alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
+# alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
 # More Kubernetes
 # Get information about Kubernetes resources
@@ -194,8 +194,9 @@ fi
 
 # Get a list of StatefulSets
 alias kgsts="kubectl get sts"
-# Get events, sorted by lastTimestamp, and only show events of type Normal
-alias kge="kubectl get events --sort-by=lastTimestamp --field-selector type!=Normal"
+# Get events, sorted by lastTimestamp, and only show events of type Normal. Though see: https://github.com/jessegoodier/kge
+alias kgee="kubectl get events --sort-by=lastTimestamp --field-selector type!=Normal"
+# kgc https://github.com/jessegoodier/kgc
 # Start a shell inside a container
 alias keit='kubectl exec -i -t'
 # Get the nginx version running in the nginx-ingress namespace
