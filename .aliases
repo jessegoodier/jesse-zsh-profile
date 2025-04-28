@@ -83,7 +83,7 @@ alias kd='kubectl describe'
 # Edit a StatefulSet
 alias kests='kubectl edit sts'
 # Find the image used in a pod
-alias kdpi='kubectl describe pod|grep -i image:'
+alias kdpi='kubectl get pods -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s '[[:space:]]' '\n' | sort -u'
 # Restart a deployment
 alias krrd='kubectl rollout restart deployment'
 # Restart a StatefulSet
