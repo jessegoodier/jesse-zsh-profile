@@ -98,14 +98,27 @@ alias kdelsts="kubectl delete sts"
 alias klcm="kubectl logs -l app.kubernetes.io/name=cost-analyzer --tail=-1 -c cost-model"
 # Get the logs for the cost-analyzer-frontend container in the cost-analyzer pod
 alias klfe="kubectl logs -l app=cost-analyzer --tail=-1 -c cost-analyzer-frontend"
-# Get the logs for the aggregator container in the aggregator pod
-alias kla="kubectl logs -l app=aggregator -c aggregator --tail=-1"
 # Get the logs for the cost-model container in the cost-analyzer pod, and follow the logs
 alias klcmf="kubectl logs -l app=cost-analyzer -c cost-model --tail=-1 --follow"
 # Get the logs for the cost-analyzer-frontend container in the cost-analyzer pod, and follow the logs
 alias klfef="kubectl logs -l app=cost-analyzer -c cost-analyzer-frontend --tail=-1 --follow"
-# Get the logs for the aggregator container in the aggregator pod, and follow the logs
-alias klaf="kubectl logs -l app=aggregator -c aggregator --tail=-1 --follow"
+# Get the logs for the aggregator container in the aggregator pod
+kla() {
+  if [[ -n $(kubectl get pods -l app=aggregator -o name 2>/dev/null) ]]; then
+    kubectl logs -l app=aggregator -c aggregator --tail=-1
+  else
+    kubectl logs -l app=cost-analyzer -c aggregator --tail=-1
+  fi
+}
+
+# Get the logs for the cost-model container in the cost-analyzer pod, and follow the logs
+klaf() {
+  if [[ -n $(kubectl get pods -l app=aggregator -o name 2>/dev/null) ]]; then
+    kubectl logs -l app=aggregator -c aggregator --tail=-1 --follow
+  else
+    kubectl logs -l app=cost-analyzer -c aggregator --tail=-1 --follow
+  fi
+}
 
 # Todo function to find the deployment
 # Find the deployment named kubecost-cost-analyzer and execute the given command in the cost-analyzer-frontend container
