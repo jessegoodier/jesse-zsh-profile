@@ -22,7 +22,7 @@ omz reload
 
 # nightly all images
 nai() {
-  helm template kubecost-nightly --repo https://kubecost.github.io/nightly-helm-chart cost-analyzer \
+  helm template kubecost-nightly --repo https://kubecost.github.io/nightly-helm-chart kubecost \
   --set networkCosts.enabled=true \
   --set clusterController.enabled=true \
   --set prometheus.alertmanager.enabled=true \
