@@ -54,6 +54,10 @@ if [ "$(command -v kubecolor)" ]; then
   alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 fi
 
+if kubectl images --help 2>&1 | grep -q 'images' ; then
+  alias ki="kubectl images"
+fi
+
 # Unalias the ksd command, which is a k scale deployment
 unalias ksd 2>/dev/null
 unalias hin 2>/dev/null
