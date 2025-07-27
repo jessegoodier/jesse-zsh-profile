@@ -72,6 +72,7 @@ alias fed="kgsec federated-store -oyaml|ksd"
 
 
 # Aliases
+alias ccusage="npx ccusage blocks --live"
 # List files in long format with hidden files and directories, and colorize the output
 alias ll='ls -lah'
 # Show the command history
