@@ -1,0 +1,155 @@
+alias ep="/opt/homebrew/bin/python3 $HOME/git/clusters/utils/epoch-converter.py"
+alias p="python3"
+# nightly all images
+
+# trivy completion
+if command -v trivy &> /dev/null; then
+  # shellcheck disable=SC1090
+  source <(trivy completion zsh)
+fi
+
+klabels() {
+  local resource="${1:-pods}"
+  kubectl get "$resource" -oyaml| \
+  yq -r '.items[] | .metadata.name as $name | .metadata.labels | to_entries | .[] | [$name, (.key + "=" + .value)] | join("   ")' \
+  | column -t
+}
+
+scurl() {
+  curl -s -o /dev/null -w "%{http_code}\n" "$@"
+}
+
+pvenv() {
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install --upgrade pip
+  pip install -r requirements.txt
+  alias p="python3"
+}
+
+kcns() {
+  kubectl create ns $1
+  mkdir $1
+  cd $1
+  cp ../.kubeconfig .
+  chmod 600 .kubeconfig
+  kubectl config set-context --current --namespace="$1"
+}
+
+klagg() {
+  podName="$(kubectl get pods -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
+  kubectl logs "$podName" | less
+}
+
+kpfprom() {
+  podName="$(kubectl get pods -l app=prometheus -o jsonpath='{.items[0].metadata.name}')"
+  kubectl port-forward "$podName" 9080:9090
+}
+
+kpfkcm() {
+  podName="$(kubectl get pods -l app=cost-analyzer -o jsonpath='{.items[0].metadata.name}')"
+  kubectl port-forward "$podName" 9003:9003
+}
+
+kpfagg() {
+  svcName="$(kubectl get svc -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
+  kubectl port-forward svc/$svcName 9004:9004
+}
+
+keticm() {
+  podName="$(kubectl get pods -l app=cost-analyzer -o jsonpath='{.items[0].metadata.name}')"
+  kubectl exec -it "$podName" -c cost-model -- bash
+}
+
+ketiagg() {
+  podName="$(kubectl get pods -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
+  kubectl exec -it "$podName" -c aggregator -- bash
+}
+
+ketils() {
+  podName="$(kubectl get pods -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
+  kubecolor exec -it "$podName" -c aggregator -- ls -lah /var/configs/waterfowl/duckdb/v0_10_3
+}
+ketilsw() {
+  podName="$(kubectl get pods -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
+  watch kubectl exec -it "$podName" -c aggregator -- ls -lah /var/configs/waterfowl/duckdb/v0_10_3
+}
+alias curltime="curl -w \"@$HOME/.curl-format.txt\" -o /dev/null -s "
+
+scan_image() {
+    local image="$1"
+    local image_type="$2"
+    echo "Scanning $image_type image: $image"
+    
+    # Create safe filename for this image
+    local safe_name=$(make_safe_filename "$image")
+    
+    # Do a single comprehensive scan that includes both OS and library vulnerabilities
+    trivy image --format json --exit-code 0 --ignore-unfixed \
+      --severity CRITICAL,HIGH,MEDIUM,LOW "$image" > "trivy_raw_${safe_name}.json"
+    
+    # Copy the raw scan to temp file for processing
+    cp "trivy_raw_${safe_name}.json" "temp_scan.json"
+    
+    # Extract OS (base) and library (binary) vulnerabilities into separate sections
+    # with proper null handling and default empty arrays
+    jq --arg img "$image" --arg type "$image_type" '
+      {
+        "image": $img,
+        "type": $type,
+        "base_vulnerabilities": (
+          [
+            (.Results // [])[] | 
+            select(.Type == "wolfi" or .Type == "ubuntu" or .Type == "debian" or 
+                    .Type == "alpine" or .Type == "redhat" or .Type == "ubi") | 
+            .Vulnerabilities // []
+          ] | flatten | 
+          group_by(.Severity) | 
+          map({
+            severity: .[0].Severity,
+            count: length,
+            vulnerabilities: map({
+              id: .VulnerabilityID,
+              package: .PkgName,
+              version: .InstalledVersion
+            })
+          }) // []
+        ),
+        "binary_vulnerabilities": (
+          [
+            (.Results // [])[] | 
+            select(.Type == "gobinary" or .Type == "jar" or .Type == "node-pkg") | 
+            .Vulnerabilities // []
+          ] | flatten |
+          group_by(.Severity) |
+          map({
+            severity: .[0].Severity,
+            count: length,
+            vulnerabilities: map({
+              id: .VulnerabilityID,
+              package: .PkgName,
+              version: .InstalledVersion
+            })
+          }) // []
+        )
+      }' temp_scan.json > "temp_result.json"
+    
+    # Append to main results file, creating an empty array if the file doesn't exist
+    if [ ! -f scan_results.json ]; then
+      echo "[]" > scan_results.json
+    fi
+    
+    # Combine results, handling potential errors
+    if jq -e . >/dev/null 2>&1 <<<"$(cat temp_result.json)"; then
+      jq -s '.[0] + [.[1]]' scan_results.json temp_result.json > temp_combined.json && \
+        mv temp_combined.json scan_results.json
+    else
+      echo "Error: Invalid JSON in temp_result.json for $image"
+      return 1
+    fi
+  }
+
+alias feder="bash /Users/jessegoodier/git/print-federated-store.sh"
+alias kgevents="kubectl get events --sort-by='.metadata.creationTimestamp'"
+alias kgeventsw="kubectl get events --sort-by='.metadata.creationTimestamp' -w"
+
