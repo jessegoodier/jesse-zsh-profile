@@ -195,8 +195,6 @@ fi
 # alias ack='ack --color --ignore-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders,.vs-kubernetes}'
 
 # More Kubernetes
-# Get information about Kubernetes resources
-alias kg='kubectl get'
 # Get persistent volumes
 alias kgpv='kubectl get pv'
 # Watch persistent volumes
@@ -215,8 +213,6 @@ if [ "$(command -v kubectx)" ]; then
   alias kx='kubectx'
 fi
 
-# Get a list of StatefulSets
-alias kgsts="kubectl get sts"
 # Get events, sorted by lastTimestamp, and only show events of type Normal. Though see: https://github.com/jessegoodier/kge
 alias kgee="kubectl get events --sort-by=lastTimestamp --field-selector type!=Normal"
 # kgc https://github.com/jessegoodier/kgc

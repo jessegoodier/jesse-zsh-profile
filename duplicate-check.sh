@@ -16,6 +16,9 @@ NC='\033[0m' # No Color
 ALIASES_LOCAL=".aliases-local"
 ALIASES_SH=".aliases"
 
+# Global flag to track if any duplicates were found
+DUPLICATES_FOUND=false
+
 # Function to print colored output
 print_status() {
     local color=$1
@@ -62,6 +65,7 @@ check_duplicates_within_file() {
         duplicate_aliases=$(echo "$aliases" | sort | uniq -d)
         if [[ -n "$duplicate_aliases" ]]; then
             print_status $RED "❌ Duplicate aliases found in $file:"
+            DUPLICATES_FOUND=true
             echo "$duplicate_aliases" | while read -r alias; do
                 print_status $YELLOW "  - $alias"
             done
@@ -78,6 +82,7 @@ check_duplicates_within_file() {
         duplicate_functions=$(echo "$functions" | sort | uniq -d)
         if [[ -n "$duplicate_functions" ]]; then
             print_status $RED "❌ Duplicate functions found in $file:"
+            DUPLICATES_FOUND=true
             echo "$duplicate_functions" | while read -r func; do
                 print_status $YELLOW "  - $func"
             done
@@ -102,6 +107,7 @@ check_duplicates_between_files() {
         common_aliases=$(comm -12 <(echo "$aliases_local" | sort) <(echo "$aliases_sh" | sort))
         if [[ -n "$common_aliases" ]]; then
             print_status $RED "❌ Aliases found in both files:"
+            DUPLICATES_FOUND=true
             echo "$common_aliases" | while read -r alias; do
                 print_status $YELLOW "  - $alias"
             done
@@ -121,6 +127,7 @@ check_duplicates_between_files() {
         common_functions=$(comm -12 <(echo "$functions_local" | sort) <(echo "$functions_sh" | sort))
         if [[ -n "$common_functions" ]]; then
             print_status $RED "❌ Functions found in both files:"
+            DUPLICATES_FOUND=true
             echo "$common_functions" | while read -r func; do
                 print_status $YELLOW "  - $func"
             done
@@ -171,6 +178,17 @@ show_summary() {
     fi
 }
 
+# Function to show final result
+show_final_result() {
+    print_status $BLUE "\n=== Final Result ==="
+    
+    if [[ "$DUPLICATES_FOUND" == true ]]; then
+        print_status $RED "❌ Duplicates were found! Please review and resolve them."
+    else
+        print_status $GREEN "🎉 No duplicates found! Your alias files are clean."
+    fi
+}
+
 # Main execution
 main() {
     print_status $BLUE "🔍 Duplicate Checker for Shell Alias Files"
@@ -192,8 +210,11 @@ main() {
     check_duplicates_within_file "$ALIASES_SH" "$ALIASES_SH"
     check_duplicates_between_files
     
-    # Show summary
-    show_summary
+    # # Show summary
+    # show_summary
+    
+    # Show final result
+    show_final_result
     
     print_status $BLUE "\n=== Check complete ==="
 }
