@@ -17,7 +17,7 @@ sudo apt-get update \
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
   && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/Brewfile-ubuntu \
-  && /home/linuxbrew/.linuxbrew/bin/brew bundle --file $HOME/Brewfile-ubuntu
+  && /home/linuxbrew/.linuxbrew/bin/brew bundle --file $HOME/Brewfile-ubuntu \
   && /home/linuxbrew/.linuxbrew/bin/brew cleanup
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
@@ -42,6 +42,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 sudo chsh -s /usr/bin/zsh $USER
 
-wget "https://get.docker.com/" -O get-docker.sh
-sh get-docker.sh
-dockerd-rootless-setuptool.sh install
+# wget "https://get.docker.com/" -O get-docker.sh
+# sh get-docker.sh
+# dockerd-rootless-setuptool.sh install
