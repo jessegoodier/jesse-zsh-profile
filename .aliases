@@ -396,3 +396,4 @@ alias feder="bash /Users/jessegoodier/git/print-federated-store.sh"
 alias kgevents="kubectl get events --sort-by='.metadata.creationTimestamp'"
 alias kgeventsw="kubectl get events --sort-by='.metadata.creationTimestamp' -w"
 
+alias whatsmyip='curl -s -X GET -4 https://ifconfig.co'
