@@ -25,9 +25,6 @@ nai() {
   helm template kubecost-nightly --repo https://kubecost.github.io/nightly-helm-chart kubecost \
   --set networkCosts.enabled=true \
   --set clusterController.enabled=true \
-  --set prometheus.server.global.external_labels.cluster_id=clusterid \
-  --set kubecostModel.federatedStorageConfigSecret=test \
-  --set global.platforms.cicd.enabled=true \
   --set global.platforms.cicd.skipSanityChecks=true \
     "$@" \
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
@@ -35,14 +32,7 @@ nai() {
 
 # kubecost all images
 kai() {
-  helm template kubecost-ga --repo https://kubecost.github.io/cost-analyzer/ cost-analyzer \
-  --set networkCosts.enabled=true \
-  --set clusterController.enabled=true \
-  --set prometheus.alertmanager.enabled=true \
-  --set prometheus.server.enabled=true \
-  --set prometheus.pushgateway.enabled=true \
-  --set prometheus.nodeExporter.enabled=true \
-  --set prometheus.configmapReload.prometheus.enabled=true \
+  helm template kubecost-ga --repo https://kubecost.github.io/kubecost kubecost \
     "$@" \
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
 }
