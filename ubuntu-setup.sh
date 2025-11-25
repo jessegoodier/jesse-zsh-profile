@@ -1,20 +1,38 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-sudo apt-get update \
-  && sudo apt-get install -y --no-install-recommends software-properties-common \
-  && sudo apt-get update \
-  && sudo apt-get install -y --no-install-recommends \
+# Detect if running as root
+if [[ "$EUID" -ne 0 ]]; then
+    # check for sudo 
+    if command -v sudo >/dev/null 2>&1; then
+    echo "sudo is installed"
+    else
+        echo "sudo is NOT installed and you are not root"
+        exit 1
+    fi
+    SUDO="$SUDO"
+else
+    SUDO=""
+fi
+
+echo "tzdata tzdata/Areas select America" | $SUDO debconf-set-selections
+echo "tzdata tzdata/Zones/America select Detroit" | $SUDO debconf-set-selections
+$SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+
+$SUDO apt-get update \
+  && $SUDO apt-get install -y --no-install-recommends software-properties-common \
+  && $SUDO apt-get update \
+  && $SUDO apt-get install -y --no-install-recommends \
   apt-utils build-essential procps curl wget file git uidmap \
   apt-transport-https vim lsb-release unzip less \
   ca-certificates locales openssh-client \
-  patch sudo uuid-runtime zsh \
-  && sudo rm -rf /var/lib/apt/lists/* \
-  && sudo apt-get clean autoclean \
-  && sudo apt-get autoremove --yes \
-  && sudo rm -rf /var/lib/{apt,dpkg,cache,log}
+  patch $SUDO uuid-runtime zsh \
+  && $SUDO rm -rf /var/lib/apt/lists/* \
+  && $SUDO apt-get clean autoclean \
+  && $SUDO apt-get autoremove --yes \
+  && $SUDO rm -rf /var/lib/{apt,dpkg,cache,log}
 
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
   && /home/linuxbrew/.linuxbrew/bin/brew install gcc \
   && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/Brewfile-ubuntu \
   && /home/linuxbrew/.linuxbrew/bin/brew bundle --file $HOME/Brewfile-ubuntu \
@@ -40,7 +58,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O $HOME/.kube-scripts/k-remove-bad-contexts.sh \
  && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh
 
-sudo chsh -s /usr/bin/zsh $USER
+$SUDO chsh -s /usr/bin/zsh $USER
 
 # wget "https://get.docker.com/" -O get-docker.sh
 # sh get-docker.sh
