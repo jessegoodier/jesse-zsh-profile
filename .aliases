@@ -36,7 +36,7 @@ kai() {
     "$@" \
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
 }
-
+alias bob=bobide
 if [ "$(command -v kubecolor)" ]; then
   alias kubectl="kubecolor"
   compdef kubecolor=kubectl
@@ -267,44 +267,6 @@ ketils() {
 ketilsw() {
   podName="$(kubectl get pods -l app=aggregator -o jsonpath='{.items[0].metadata.name}')"
   watch kubectl exec -it "$podName" -c aggregator -- ls -lah /var/configs/waterfowl/duckdb/v0_10_3
-}
-
-# Comprehensive curl timing function with all variables
-curltime() {
-  local url="$1"
-  if [ -z "$url" ]; then
-    echo "Usage: curltime <url>"
-    echo "Example: curltime 'https://example.com'"
-    return 1
-  fi
-  
-  curl -w "
-     DNS Lookup:        %{time_namelookup}s
-     TCP Connect:       %{time_connect}s
-     TLS Handshake:     %{time_appconnect}s
-     Pretransfer:       %{time_pretransfer}s
-     Redirect:          %{time_redirect}s
-     Start Transfer:    %{time_starttransfer}s
-     Total:             %{time_total}s
-     HTTP Code:         %{http_code}
-     Size Download:     %{size_download} bytes
-     Size Upload:       %{size_upload} bytes
-     Speed Download:    %{speed_download} bytes/s
-     Speed Upload:      %{speed_upload} bytes/s
-     Content Type:      %{content_type}
-     SSL Verify:        %{ssl_verify_result}
-     Local IP:          %{local_ip}:%{local_port}
-     Remote IP:         %{remote_ip}:%{remote_port}
-     Effective URL:     %{url_effective}
-     Redirect Count:    %{num_redirects}
-     Redirect Time:     %{time_redirect}s
-     Connect Time:      %{time_connect}s
-     App Connect Time:  %{time_appconnect}s
-     Pre Transfer Time: %{time_pretransfer}s
-     Start Transfer:    %{time_starttransfer}s
-     Name Lookup Time:  %{time_namelookup}s
-     Total Time:        %{time_total}s
-  " -o /dev/null -s "$url"
 }
 
 
