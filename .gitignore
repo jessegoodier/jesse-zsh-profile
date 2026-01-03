@@ -4,3 +4,4 @@ temp/
 .cache/
 .wget-hsts
 .zshrc.pre-oh-my-zsh
+.bash_history

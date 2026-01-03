@@ -15,57 +15,16 @@ The .zshrc needs a little clean up, but it works for now.
 
 ## Usage
 
-> This Docker image is huge! It is only for testing purposes, though it is useful for experimenting with profile changes without risk.
-
-You can copy the commands out of the [Dockerfile](Dockerfile) for the items you want to install in your shell.
-
-Or use a the [prebuilt image](https://hub.docker.com/r/jgoodier/zsh-admin-tools)
-
-### Dockerfile
-
-You can safely test these settings in a Docker container without impact to your current terminal.
-
-You can build your own image (this will take a long time to build):
-
+create a container:
 ```sh
-git clone git@github.com:jessegoodier/jesse-zsh-profile.git
-cd jesse-zsh-profile
-docker build --tag zsh-admin-tools .
-docker run -i -t --rm zsh-admin-tools:latest zsh
+docker run -i -t --name jesse-zsh-profile \
+ -v $PWD:/root ubuntu:latest
 ```
 
-Or use a prebuilt image:
+run setup:
 
 ```sh
-docker run -i -t --rm jgoodier/zsh-admin-tools:latest zsh
-```
-
-Profile credentials to your AWS/Azure/GCP accounts:
-
-```sh
-az login
-```
-
-```sh
-aws configure
-```
-
-```sh
-gcloud auth login
-```
-
-Get the cluster contexts:
-
-```sh
-cloud-get-all-eks-clusters
-```
-
-```sh
-cloud-get-all-aks-clusters
-```
-
-```sh
-cloud-get-all-gcp-clusters
+bash /root/ubuntu-setup.sh
 ```
 
 Use tab completion with kubectl:
@@ -82,14 +41,9 @@ kn <tab>
 
 then
 ```sh
-kgp <tab> -oyaml
+kgp <tab>
 ```
 
-use kgc (kubectl get containers)!
-
-```sh
-kgc -A
-```
 
 ### Install krew
 
@@ -99,7 +53,10 @@ install krew:
 Install the best krew tools once in the shell:
 
 ```sh
-
 k krew install resource-capacity
 k krew install cost
+k krew install images
+k krew install ktop
+k krew install browse-pvc
+k krew install config-cleanup
 ```
