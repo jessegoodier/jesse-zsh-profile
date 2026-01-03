@@ -9,7 +9,7 @@ if [[ "$EUID" -ne 0 ]]; then
         echo "sudo is NOT installed and you are not root"
         exit 1
     fi
-    SUDO="$SUDO"
+    SUDO="sudo"
 else
     SUDO=""
 fi
