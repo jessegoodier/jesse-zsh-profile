@@ -1,3 +1,6 @@
 kubeconfig*
 temp/
 .DS_Store
+.cache/
+.wget-hsts
+.zshrc.pre-oh-my-zsh

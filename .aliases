@@ -37,6 +37,8 @@ kai() {
     --skip-tests | yq -r ".. | .image? | select(. != null)" | sort -u
 }
 alias bob=bobide
+alias bobcli=/opt/homebrew/bin/bob
+
 if [ "$(command -v kubecolor)" ]; then
   alias kubectl="kubecolor"
   compdef kubecolor=kubectl

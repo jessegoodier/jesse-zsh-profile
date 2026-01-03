@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Detect if running as root
 if [[ "$EUID" -ne 0 ]]; then
@@ -15,9 +14,10 @@ else
     SUDO=""
 fi
 
-echo "tzdata tzdata/Areas select America" | $SUDO debconf-set-selections
-echo "tzdata tzdata/Zones/America select Detroit" | $SUDO debconf-set-selections
+$SUDO apt-get update
 $SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+$SUDO ln -fs /usr/share/zoneinfo/America/Detroit /etc/localtime
+$SUDO dpkg-reconfigure --frontend noninteractive tzdata
 
 $SUDO apt-get update \
   && $SUDO apt-get install -y --no-install-recommends software-properties-common \
@@ -48,15 +48,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.vimrc -O $HOME/.vimrc \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.prompt.zsh -O $HOME/.prompt.zsh \
  && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.aliases -O $HOME/.aliases \
- && mkdir -p ~/.kube-scripts \
- && wget https://raw.githubusercontent.com/jessegoodier/kgc/main/kgc.sh -O $HOME/.kube-scripts/kgc.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/aliases.sh -O $HOME/.kube-scripts/aliases.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-aks-clusters.sh -O $HOME/.kube-scripts/get-all-aks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-eks-clusters.sh -O $HOME/.kube-scripts/get-all-eks-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/get-all-gke-clusters.sh -O $HOME/.kube-scripts/get-all-gke-clusters.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-get-all-pod-images.sh -O $HOME/.kube-scripts/k-get-all-pod-images.sh \
- && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.kube-scripts/k-remove-bad-contexts.sh -O $HOME/.kube-scripts/k-remove-bad-contexts.sh \
- && sed -i "s/alias ksd/#  alias ksd/" ~/.oh-my-zsh/plugins/kubectl/kubectl.plugin.zsh
+ && echo "unalias ksd" >> ~/.zshrc \
+ && echo "unalias kpf" >> ~/.zshrc \
+ && mkdir -p ~/.config/cspell \
+ && wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.config/cspell/cspell.json -O ~/.config/cspell/cspell.json
 
 $SUDO chsh -s /usr/bin/zsh $USER
 
