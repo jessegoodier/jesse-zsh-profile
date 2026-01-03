@@ -5,3 +5,7 @@ temp/
 .wget-hsts
 .zshrc.pre-oh-my-zsh
 .bash_history
+.oh-my-zsh/
+.zshrc.*
+.zcompdum*
+
