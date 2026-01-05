@@ -1,55 +1,67 @@
 # Set PATH
-export PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.local/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH
-
-# Set environment variables
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
+if ${KREW_ROOT}; then
+    export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH
+fi
+# Detects Homebrew path based on standard install locations
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)" # Apple Silicon Mac
+elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"    # Intel Mac
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" # Linux
+fi
 # Set Zsh options
 ZSH_DISABLE_COMPFIX=true
 DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
+# --- 2. OH MY ZSH SETUP ---
+export ZSH="$HOME/.oh-my-zsh"
 
-# Set Zsh theme
-ZSH_THEME=""
-ZSH="$HOME/.oh-my-zsh"
-
-# shell command completion immediately
-zstyle ':autocomplete:*' min-input 1
-zstyle ':autocomplete:*' insert-unambiguous yes
-
-# Set plugins
+# Modern Plugins (Requires: brew install zsh-autosuggestions zsh-syntax-highlighting)
+# --- 1. PLUGINS ---
 plugins=(
-alias-tips
-aws
-colorize
-command-not-found
-cp
-extract
-gcloud
-git
-helm
-kubectl
-zsh-autosuggestions
-zsh-completions
-zsh-kubectl-prompt
-zsh-syntax-highlighting
+    alias-tips
+    aws
+    colorize
+    command-not-found
+    cp
+    extract
+    fzf-tab
+    gcloud
+    git
+    helm
+    kubectl
+    kubectx
+    z
+    zsh-autosuggestions
+    zsh-completions
+    zsh-kubectl-prompt
+    zsh-syntax-highlighting
 )
 
-# other plugins : httpie
-# sudo
-# systemadmin
-# systemd
-# ubuntu
+# --- 2. FZF INITIALIZATION ---
+# This enables CTRL-R (history) and CTRL-T (files)
+source <(fzf --zsh)
 
-# Source oh-my-zsh
+# --- 3. COMPLETION STYLING ---
+# shell command completion immediately
+# no menu
+zstyle ':completion:*' menu no
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# Insert unambiguous completions immediately
+zstyle ':autocomplete:*' insert-unambiguous yes
+# Preview directory contents when completing 'cd'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
+
 source $ZSH/oh-my-zsh.sh
 
-
-# more command completions
-
-[ "$(command -v brew)" &>/dev/null ] && [ -f "$(brew --prefix)/etc/bash_completion.d/az" &>/dev/null ] && autoload -U +X bashcompinit && bashcompinit && \. "$(brew --prefix)/etc/bash_completion.d/az"
-
-[ "$(command -v stern)" ] && source <(stern --completion=zsh)
+# --- 3. MODERN COMPLETION SETTINGS ---
+setopt autocd
+setopt extendedglob
+# setopt NO_menu_complete   # Don't force first match
+setopt auto_menu         # Show menu on second tab
+unsetopt flowcontrol     # Free up Ctrl-S and Ctrl-Q
 
 if [ -s "$(command -v kubecolor)" ]; then
   alias kubectl="kubecolor"
@@ -61,30 +73,21 @@ fi
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
 
-# Set window title functions
-function title()
-{
-echo -ne "\e]1;$USER"@"$HOST\a"
-}
+if type brew &>/dev/null; then
+    source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
-function ssh()
-{
-   /usr/bin/ssh "$@"
-   title $USER"@"$HOST
-}
+    autoload -Uz compinit
+    compinit
+fi
+# --- 4. OS-SPECIFIC LOADING ---
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    [[ -f ~/.zsh_macos.zsh ]] && source ~/.zsh_macos.zsh
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    [[ -f ~/.zsh_linux.zsh ]] && source ~/.zsh_linux.zsh
+fi
 
-function su()
-{
-   /bin/su "$@"
-   title $USER"@"$HOST
-}
-
-# Set git prompt
-ZSH_THEME_GIT_PROMPT_PREFIX=" on %{$fg[magenta]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[green]%}!"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[green]%}?"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 # Set history options
 export HISTFILESIZE=1000000000
@@ -94,20 +97,6 @@ export HISTTIMEFORMAT="[%F %T] "
 setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
-
-# Load colors and compinit
-autoload -U colors; colors
-autoload -Uz compinit
-
-# Check for brew, add functions to FPATH
-if type brew &>/dev/null
-then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-fi
-
-# Run compinit
-compinit
-
 # Source fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # Source aliases and prompt
@@ -116,5 +105,5 @@ compinit
 [ -f "$HOME/.kube-scripts/aliases.sh" ] && source "$HOME/.kube-scripts/aliases.sh"
 [ -f "$HOME/.prompt.zsh" ] && source "$HOME/.prompt.zsh"
 [ -f "$HOME/.alias-help" ] && source "$HOME/.alias-help"
-unalias ksd
-unalias kpf
+unalias ksd 2>/dev/null
+unalias kpf 2>/dev/null
