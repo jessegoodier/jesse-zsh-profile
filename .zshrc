@@ -1,74 +1,76 @@
-# Set PATH
-if ${KREW_ROOT}; then
-    export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH
-fi
-# Detects Homebrew path based on standard install locations
+# --- 1. ENVIRONMENT & PATHS ---
+# Detect Homebrew early so we can use $(brew --prefix)
 if [[ -f /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)" # Apple Silicon Mac
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -f /usr/local/bin/brew ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"    # Intel Mac
+    eval "$(/usr/local/bin/brew shellenv)"
 elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" # Linux
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
-# Set Zsh options
+
+# Set PATHs
+export PATH="$HOME/.local/bin:$PATH"
+# Krew (Kubernetes plugins)
+export KREW_ROOT="${KREW_ROOT:-$HOME/.krew}"
+[[ -d "${KREW_ROOT}/bin" ]] && export PATH="${KREW_ROOT}/bin:$PATH"
+
+export EDITOR='vim'
+export VISUAL='vim'
+
+# --- 2. OH MY ZSH CONFIGURATION ---
+export ZSH="$HOME/.oh-my-zsh"
+
+# OMZ behavior flags (Must be set BEFORE sourcing OMZ)
 ZSH_DISABLE_COMPFIX=true
 DISABLE_MAGIC_FUNCTIONS=true
 DISABLE_UPDATE_PROMPT=true
-# --- 2. OH MY ZSH SETUP ---
-export ZSH="$HOME/.oh-my-zsh"
 
-# Modern Plugins (Requires: brew install zsh-autosuggestions zsh-syntax-highlighting)
-# --- 1. PLUGINS ---
-plugins=(
-    alias-tips
-    aws
-    colorize
-    command-not-found
-    cp
-    extract
-    fzf-tab
-    gcloud
-    git
-    helm
-    kubectl
-    kubectx
-    minikube
-    z
-    zsh-autosuggestions
-    zsh-completions
-    zsh-kubectl-prompt
-    zsh-syntax-highlighting
-)
-
-
-# --- 3. COMPLETION STYLING ---
-# shell command completion immediately
-zstyle ':autocomplete:*' min-input 1
-# no menu
-zstyle ':completion:*' menu no
-# Case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-# Insert unambiguous completions immediately
-zstyle ':autocomplete:*' insert-unambiguous yes
-# Preview directory contents when completing 'cd'
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
-
-source $ZSH/oh-my-zsh.sh
-
-
+# Add Homebrew zsh-completions to FPATH before OMZ calls compinit
 if type brew &>/dev/null; then
-    source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
-    autoload -Uz compinit
-    compinit
+    FPATH="$(brew --prefix)/share/zsh-completions:$FPATH"
 fi
 
-# Set history options
-# History File Location
-export HISTFILE="$HOME/.zsh_history"
+# Plugin List
+plugins=(
+    alias-tips aws colorize command-not-found cp extract
+    fzf-tab gcloud git helm kubectl kubectx minikube z
+    zsh-autosuggestions zsh-completions zsh-kubectl-prompt zsh-syntax-highlighting
+)
 
+# --- 3. SOURCE OH MY ZSH ---
+# This initializes completions and the plugin system
+source $ZSH/oh-my-zsh.sh
+
+# --- 4. MANUAL PLUGIN SOURCING (Brew Versions) ---
+# Better to source these after OMZ to ensure they highlight correctly
+if type brew &>/dev/null; then
+    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# --- 5. COMPLETION & ZSTYLE ---
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+zstyle ':completion:*' menu no
+# preview directory's content with eza when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# custom fzf flags
+# NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
+zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+# To make fzf-tab follow FZF_DEFAULT_OPTS.
+# NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
+# switch group using `<` and `>`
+zstyle ':fzf-tab:*' switch-group '<' '>'
+
+# --- 6. HISTORY SETTINGS (Optimized for 1B lines) ---
+export HISTFILE="$HOME/.zsh_history"
 # Zsh-specific History Limits
 export HISTSIZE=1000000         # How many lines to keep in active memory
 export SAVEHIST=1000000         # How many lines to save in the actual file
@@ -83,37 +85,41 @@ setopt HIST_IGNORE_SPACE         # Don't record commands that start with a space
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry
 unsetopt bang_hist
 
+# --- 7. SHELL OPTIONS & KEYBINDINGS ---
 setopt autocd
 setopt extendedglob
-setopt NO_menu_complete   # Don't force first match
-# setopt auto_menu         # Show menu on second tab
-unsetopt flowcontrol     # Free up Ctrl-S and Ctrl-Q
-# Set key bindings
+setopt NO_menu_complete
+unsetopt flowcontrol
+
+# Key bindings
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
 
-# This enables CTRL-R (history) and CTRL-T (files)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# Source aliases and prompt
+# FZF initialization
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# --- 8. ALIASES & CUSTOM FUNCTIONS ---
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 [ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
 [ -f "$HOME/.prompt.zsh" ] && source "$HOME/.prompt.zsh"
 
-foreach cmd (kpf ksd); do
+# Clean up conflicting aliases from plugins
+for cmd in kpf ksd; do
   unalias $cmd 2>/dev/null
 done
-if [ -s "$(command -v kubecolor)" ]; then
+
+# Kubernetes Tooling
+if (( $+commands[kubecolor] )); then
   alias kubectl="kubecolor"
-  compdef kubecolor=kubectl
+  compdef _kubectl kubecolor  # Corrected compdef syntax
   alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 fi
+
+alias curl='noglob curl'
+
+# --- 9. OS SPECIFIC CONFIGS ---
 if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f ~/.zsh_macos.zsh ]] && source ~/.zsh_macos.zsh
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     [[ -f ~/.zsh_linux.zsh ]] && source ~/.zsh_linux.zsh
 fi
-
-alias curl='noglob curl'
-export PATH="$HOME/.local/bin:$PATH"
-export EDITOR='vim'
-export VISUAL='vim'
