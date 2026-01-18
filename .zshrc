@@ -103,7 +103,26 @@ zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
 
 # FZF initialization (enables Ctrl+R history search and Ctrl+T file search)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# FZF Configuration
+export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
+
+# Ctrl+R: History Search with Syntax Highlighting
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {} | bat --color=always --style=plain --language=sh'
+  --preview-window down:3:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --color header:italic
+  --header 'Press CTRL-/ to toggle preview'
+  --pointer='▶' --marker='✓'
+"
+
+if [[ -f ~/.fzf.zsh ]]; then
+    source ~/.fzf.zsh
+elif type brew &>/dev/null; then
+    # Fallback to Homebrew installed paths
+    source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+    source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+fi
 
 # --- 8. ALIASES & CUSTOM FUNCTIONS ---
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
