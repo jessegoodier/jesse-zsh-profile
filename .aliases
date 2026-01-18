@@ -165,7 +165,9 @@ alias cpuinfo='lscpu'
 # List the contents of the current directory in human-readable format and show the size of each file in KB, MB, GB, etc.
 alias df='df -H'
 # List the contents of the current directory in sorted order by size, and for each file, show the size in KB, MB, GB, etc.
-alias du='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "-${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
+alias du2='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "-${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
+#find files that are only in the file system of the base folder
+alias du3="sudo du -xh --max-depth=1"
 
 # If exa is installed, use it as the default ls command, with colorized output, icons, and additional information such as file type
 if [ "$(command -v exa)" ]; then
