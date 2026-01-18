@@ -34,7 +34,7 @@ fi
 plugins=(
     alias-tips aws colorize command-not-found cp extract
     fzf-tab gcloud git helm kubectl kubectx minikube z
-    zsh-autosuggestions zsh-completions zsh-kubectl-prompt zsh-syntax-highlighting
+    zsh-completions zsh-kubectl-prompt
 )
 
 # --- 3. SOURCE OH MY ZSH ---
@@ -58,8 +58,15 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
-# preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# preview command output (e.g. for kill)
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+# preview environment variables
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \
+	fzf-preview 'echo ${(P)word}'
 # custom fzf flags
 # NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
 zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
@@ -95,8 +102,8 @@ unsetopt flowcontrol
 zle -A {.,}history-incremental-search-forward
 zle -A {.,}history-incremental-search-backward
 
-# FZF initialization
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# FZF initialization (enables Ctrl+R history search and Ctrl+T file search)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # --- 8. ALIASES & CUSTOM FUNCTIONS ---
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
