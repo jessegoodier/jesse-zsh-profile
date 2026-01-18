@@ -89,7 +89,7 @@ setopt HIST_EXPIRE_DUPS_FIRST    # If the limit is reached, expire duplicates fi
 setopt HIST_IGNORE_DUPS          # Don't record an entry if it's just like the last one
 setopt HIST_FIND_NO_DUPS         # Do not display a line previously found even if it is a duplicate
 setopt HIST_IGNORE_SPACE         # Don't record commands that start with a space (useful for secrets)
-setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry
+unsetopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry
 unsetopt bang_hist
 
 # --- 7. SHELL OPTIONS & KEYBINDINGS ---
