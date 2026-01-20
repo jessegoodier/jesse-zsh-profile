@@ -16,6 +16,7 @@ NOPASSWD
 OIDC
 PGDATABASE
 PGHOST
+PGPASSWORD
 PGPORT
 PGUSER
 PYTHONDONTWRITEBYTECODE
@@ -58,6 +59,7 @@ chsh
 cicd
 clickhouse
 cloudability
+cloudnative
 cnpg
 codecov
 codeql
@@ -91,6 +93,7 @@ datasources
 dateutil
 dawg
 dbot
+dbuser
 deref
 deserializers
 detailedbilling
@@ -141,6 +144,7 @@ ignorecase
 iife
 imageid
 incluster
+ingestions
 ingestor
 initcontainer
 initdb
@@ -160,12 +164,14 @@ krew
 kube
 kubeadm
 kubeconfig
+kubeconform
 kubecost
 kubectl
 kubelet
 kubernetes
 kubescaler
 kubetail
+kyverno
 labelmap
 lcov
 lesspipe
@@ -216,8 +222,11 @@ opti
 packagetype
 pagekit
 papt
+pearsonr
 persistentvolumeclaims
 persistentvolumes
+pgcli
+pgerror
 pipenv
 pipx
 pnpm
@@ -228,6 +237,7 @@ prettytable
 procps
 productkey
 prometheusremotewrite
+psql
 pushd
 pushgateway
 pwsh
@@ -268,6 +278,7 @@ sigv
 singlepod
 skopeo
 smartcase
+spearmanr
 specberus
 stackwatch
 statefulset
@@ -281,6 +292,7 @@ thanosio
 thistogram
 tolerations
 tomli
+tplvalues
 tput
 treeshake
 trieb
