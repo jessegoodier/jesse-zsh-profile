@@ -34,7 +34,7 @@ fi
 plugins=(
     alias-tips aws colorize command-not-found cp extract
     fzf-tab gcloud git helm kubectl kubectx minikube z
-    zsh-completions zsh-kubectl-prompt
+    zsh-kubectl-prompt
 )
 
 # --- 3. SOURCE OH MY ZSH ---

@@ -52,6 +52,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 $SUDO chsh -s /usr/bin/zsh $USER
 
+# $SUDO dpkg --configure --pending
 # wget "https://get.docker.com/" -O get-docker.sh
 # sh get-docker.sh
 # dockerd-rootless-setuptool.sh install
