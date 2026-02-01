@@ -14,6 +14,9 @@ wget https://raw.githubusercontent.com/jessegoodier/jesse-zsh-profile/main/.alia
   && omz reload
 }
 
+if kubectl images --help 2>&1 | grep -q 'images' ; then
+  alias ki="kubectl images"
+fi
 # nightly all images
 nai() {
   helm template kubecost-nightly --repo https://kubecost.github.io/nightly-helm-chart kubecost \
@@ -33,15 +36,8 @@ kai() {
 alias bob=bobide
 alias bobcli=/opt/homebrew/bin/bob
 
-if [ "$(command -v kubecolor)" ]; then
-  alias kubectl="kubecolor"
-  compdef kubecolor=kubectl
-  alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
-fi
-
-if kubectl images --help 2>&1 | grep -q 'images' ; then
-  alias ki="kubectl images"
-fi
+# kubecolor setup moved to .zshrc to avoid duplicate
+# kubectl images check removed - was spawning kubectl on every startup
 
 # Unalias the ksd command, which is a k scale deployment
 unalias ksd 2>/dev/null
@@ -57,8 +53,7 @@ alias fed="kgsec federated-store -oyaml|ksd"
 
 
 # Aliases
-# List files in long format with hidden files and directories, and colorize the output
-alias ll='ls -lah'
+# ll alias defined conditionally below (eza version preferred)
 # Show the command history
 alias h='history'
 # Get information about Kubernetes resources
@@ -140,7 +135,7 @@ alias eks='eksctl get cluster'
 # Clear the terminal screen
 alias c='clear'
 
-alias cat='bat --style=plain --paging=never'
+alias cat='bat --paging=never'
 # Send five ICMP ECHO_REQUEST packets and stop
 alias ping='ping -c 5'
 # Send 100 ICMP ECHO_REQUEST packets with a packet size of 0.2 seconds and do not wait one second between packets
@@ -166,15 +161,13 @@ alias cpuinfo='lscpu'
 alias df='df -H'
 # List the contents of the current directory in sorted order by size, and for each file, show the size in KB, MB, GB, etc.
 alias du2='du -sk * | sort -n | while read size fname; do for unit in k M G T P E Z Y; do if [ $size -lt 1024 ]; then echo -e "-${size}${unit}\t${fname}"; break; fi; size=$((size/1024)); done; done'
-#find files that are only in the file system of the base folder
-alias du3="sudo du -xh --max-depth=1"
 
-# If exa is installed, use it as the default ls command, with colorized output, icons, and additional information such as file type
-if [ "$(command -v exa)" ]; then
-  alias ll='exa -l --color always --icons -a -s type'
-  alias l='exa --color always --icons -a -s type'
-  alias la='exa -l --color always --icons -a -s type'
-  alias ls='exa -G  --color auto --icons -a -s type'
+# If eza is installed, use it as the default ls command, with colorized output, icons, and additional information such as file type
+if [ "$(command -v eza)" ]; then
+  alias ll='eza -l --color always --icons -a -s type'
+  alias l='eza --color always --icons -a -s type'
+  alias la='eza -l --color always --icons -a -s type'
+  alias ls='eza -G  --color auto --icons -a -s type'
 fi
 
 # Use grep with colorized output and exclude certain directories, such as.bzr, CVS,.git,.hg,.svn,.idea,.tox,.vscode-server-insiders,.vscode-server,.vscode-server-insiders, and.vs-kubernetes

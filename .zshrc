@@ -1,5 +1,6 @@
-# --- 1. ENVIRONMENT & PATHS ---
-# Detect Homebrew early so we can use $(brew --prefix)
+# Source common shell settings
+source "$HOME/shell-common"
+
 if [[ -f /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -f /usr/local/bin/brew ]]; then
@@ -33,7 +34,7 @@ fi
 # Plugin List
 plugins=(
     alias-tips aws colorize command-not-found cp extract
-    fzf-tab gcloud git helm kubectl kubectx minikube z
+    gcloud git helm kubectl kubectx minikube z
     zsh-kubectl-prompt
 )
 
@@ -41,41 +42,15 @@ plugins=(
 # This initializes completions and the plugin system
 source $ZSH/oh-my-zsh.sh
 
-# --- 4. MANUAL PLUGIN SOURCING (Brew Versions) ---
-# Better to source these after OMZ to ensure they highlight correctly
-if type brew &>/dev/null; then
-    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
-
 # --- 5. COMPLETION & ZSTYLE ---
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
-# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
-zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 # set list-colors to enable filename colorizing
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# preview command output (e.g. for kill)
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
-  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
-zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
-# preview environment variables
-zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \
-	fzf-preview 'echo ${(P)word}'
-# custom fzf flags
-# NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
-# To make fzf-tab follow FZF_DEFAULT_OPTS.
-# NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
-zstyle ':fzf-tab:*' use-fzf-default-opts yes
-# switch group using `<` and `>`
-zstyle ':fzf-tab:*' switch-group '<' '>'
-
 # --- 6. HISTORY SETTINGS (Optimized for 1B lines) ---
 export HISTFILE="$HOME/.zsh_history"
 # Zsh-specific History Limits
@@ -128,7 +103,6 @@ fi
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 [ -f "$HOME/.aliases-local" ] && source "$HOME/.aliases-local"
 [ -f "$HOME/.prompt.zsh" ] && source "$HOME/.prompt.zsh"
-
 # Clean up conflicting aliases from plugins
 for cmd in kpf ksd; do
   unalias $cmd 2>/dev/null
@@ -140,12 +114,16 @@ if (( $+commands[kubecolor] )); then
   compdef _kubectl kubecolor  # Corrected compdef syntax
   alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 fi
-
 alias curl='noglob curl'
-
+#export KUBECONFIG=.kubeconfig
 # --- 9. OS SPECIFIC CONFIGS ---
 if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f ~/.zsh_macos.zsh ]] && source ~/.zsh_macos.zsh
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     [[ -f ~/.zsh_linux.zsh ]] && source ~/.zsh_linux.zsh
+fi
+# Better to source these after OMZ to ensure they highlight correctly
+if type brew &>/dev/null; then
+    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi

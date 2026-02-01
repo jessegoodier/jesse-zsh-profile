@@ -1,17 +1,11 @@
-
-# Set git prompt
-ZSH_THEME_GIT_PROMPT_PREFIX=" on %{$fg[magenta]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[green]%}!"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[green]%}?"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-
-PROMPT='
-%{$fg[yellow]%}%n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
+# Disable the aws plugin's default RPROMPT display
+SHOW_AWS_PROMPT=false
+# Function to show AWS_PROFILE if it's not "default" or empty
+function aws_profile_info() {
+  if [[ -n "$AWS_PROFILE" && "$AWS_PROFILE" != "default" ]]; then
+    echo "%{$fg[cyan]%} $AWS_PROFILE %{$reset_color%}"
+  fi
+}
+RPROMPT=""
+PROMPT='$(aws_profile_info)%{$fg[yellow]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}%{$fg[blue]%} %n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
 >'
-
-if [ -f $HOME/.kube/config ] && [ "$(command -v kubectl)" ]; then
-PROMPT='
-%{$fg[yellow]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}%{$fg[blue]%} %n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%} in %{$fg_bold[green]%}$PWD%{$reset_color%}$(git_prompt_info)
->'
-fi
