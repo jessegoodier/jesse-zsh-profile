@@ -4,9 +4,11 @@ Apptio
 COMPREPLY
 COOLDOWN
 CWORD
+Debugf
 Distro
 Goodier
 Grafana
+HOME
 IRSA
 ITERM
 Ingestors
@@ -21,9 +23,12 @@ PGPORT
 PGUSER
 PYTHONDONTWRITEBYTECODE
 PYTHONIOENCODING
+PYTHONPATH
 PYTHONUNBUFFERED
+RPROMPT
 Relabelings
 Thanos
+Warnf
 YOURKEY
 adot
 agentless
@@ -40,6 +45,7 @@ autocmd
 automount
 autoremove
 autoscaler
+autosuggestions
 backend
 backreference
 bingentojson
@@ -49,8 +55,10 @@ blackbox
 boto
 bottlerocket
 buildpath
+buildx
 bumpversion
 cadvisor
+canva
 certmanager
 cfile
 chargeback
@@ -59,6 +67,7 @@ chsh
 cicd
 clickhouse
 cloudability
+cloudcost
 cloudnative
 cnpg
 codecov
@@ -80,6 +89,7 @@ costmodel
 costmodeldigest
 costmodelnightlydigest
 coverallsapp
+crds
 cspellcache
 csvfile
 curlimages
@@ -111,10 +121,12 @@ expandtab
 falsenegative
 fargate
 fastapi
+feder
 finops
 finopsagent
 flatpack
 flatpacked
+fluentbit
 fontcolor
 fontname
 fontsize
@@ -128,6 +140,7 @@ ghostwhite
 gimu
 globby
 globstar
+gnubin
 goodier
 govee
 grafana
@@ -203,6 +216,8 @@ mypassword
 mypy
 myusername
 namespace
+networkinsight
+networkinsights
 nginxinc
 nginxplus
 nindent
@@ -225,6 +240,7 @@ papt
 pearsonr
 persistentvolumeclaims
 persistentvolumes
+pflag
 pgcli
 pgerror
 pipenv
@@ -237,6 +253,7 @@ prettytable
 procps
 productkey
 prometheusremotewrite
+promtail
 psql
 pushd
 pushgateway
@@ -251,12 +268,15 @@ pythondontwritebytecode
 pythonhosted
 pythonunbuffered
 pyyaml
+rclone
+redirections
 regcred
 regctl
 relativenumber
 replicaset
 replicasets
 replicationcontrollers
+reserialized
 rgba
 richprint
 rightsizer
@@ -266,12 +286,15 @@ rrdatas
 ruamel
 runid
 résumé
+sdist
 seccomp
 secretname
 senvs
 serializers
 serviceaccount
+serviceaccounts
 setuptools
+shellenv
 shiftwidth
 sidecar
 sigv
@@ -294,6 +317,7 @@ tolerations
 tomli
 tplvalues
 tput
+traefik
 treeshake
 trieb
 trunc
@@ -305,6 +329,7 @@ typecheck
 typedoc
 tzdata
 unalias
+unmarshals
 urlencode
 urllib
 uvicorn
@@ -319,6 +344,7 @@ vulns
 walk-throughs
 wcswidth
 webdeveric
+websecure
 wireapp
 wolfi
 workdir
